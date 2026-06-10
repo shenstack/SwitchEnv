@@ -954,30 +954,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "env-assistant"
-version = "1.0.0"
-dependencies = [
- "async-trait",
- "chrono",
- "dirs",
- "rusqlite",
- "rusqlite_migration",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-clipboard-manager",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-notification",
- "tauri-plugin-shell",
- "thiserror 2.0.18",
- "tokio",
- "uuid",
- "winreg 0.52.0",
-]
-
-[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3587,6 +3563,30 @@ dependencies = [
  "base64 0.21.7",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "switchenv"
+version = "1.0.0"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "dirs",
+ "rusqlite",
+ "rusqlite_migration",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-clipboard-manager",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-notification",
+ "tauri-plugin-shell",
+ "thiserror 2.0.18",
+ "tokio",
+ "uuid",
+ "winreg 0.52.0",
 ]
 
 [[package]]

@@ -82,7 +82,7 @@ fi
                 name, ETC_ENVIRONMENT, name, name, value, ETC_ENVIRONMENT, name, value, ETC_ENVIRONMENT
             );
 
-            let temp_file = std::env::temp_dir().join(format!("env-assistant-{}.sh", uuid::Uuid::new_v4()));
+            let temp_file = std::env::temp_dir().join(format!("SwitchEnv-{}.sh", uuid::Uuid::new_v4()));
             std::fs::write(&temp_file, &script)
                 .map_err(|e| PlatformError::PermissionDenied(e.to_string()))?;
 
@@ -114,7 +114,7 @@ sed -i '/^{}=/d' {}
                 name, ETC_ENVIRONMENT
             );
 
-            let temp_file = std::env::temp_dir().join(format!("env-assistant-{}.sh", uuid::Uuid::new_v4()));
+            let temp_file = std::env::temp_dir().join(format!("SwitchEnv-{}.sh", uuid::Uuid::new_v4()));
             std::fs::write(&temp_file, &script)
                 .map_err(|e| PlatformError::PermissionDenied(e.to_string()))?;
 

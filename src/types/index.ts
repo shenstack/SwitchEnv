@@ -22,6 +22,12 @@ export interface EnvGroup {
   updatedAt: number;
 }
 
+export interface EnvVarConflict {
+  name: string;
+  existingValue: string;
+  newValue: string;
+}
+
 export interface ActivationResult {
   success: boolean;
   conflicts: EnvVarConflict[];
@@ -29,10 +35,25 @@ export interface ActivationResult {
   errors: string[];
 }
 
-export interface EnvVarConflict {
+/**
+ * 变量组模板：保存一组常用的变量名。
+ */
+export interface Template {
+  id: string;
   name: string;
-  existingValue: string;
-  newValue: string;
+  keys: string[];
+  createdAt: number;
+  updatedAt: number;
+}
+
+/**
+ * 锁链：互斥分组集合，同一锁链下同一时间只能有一个变量组激活。
+ */
+export interface Chain {
+  id: string;
+  name: string;
+  createdAt: number;
+  updatedAt: number;
 }
 
 export interface HistoryRecord {

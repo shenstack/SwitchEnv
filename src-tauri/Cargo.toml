@@ -1,12 +1,12 @@
 [package]
-name = "env-assistant"
+name = "switchenv"
 version = "1.0.0"
 description = "A modern environment variable management tool"
 authors = ["you"]
 edition = "2021"
 
 [lib]
-name = "env_assistant_lib"
+name = "switchenv_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

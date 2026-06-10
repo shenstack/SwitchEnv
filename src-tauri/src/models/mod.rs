@@ -156,3 +156,55 @@ impl Default for AppSettings {
         }
     }
 }
+
+/// 变量组模板：保存一组常用的变量名，快速创建变量组。
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Template {
+    pub id: String,
+    pub name: String,
+    pub keys: Vec<String>,
+    #[serde(rename = "createdAt")]
+    pub created_at: i64,
+    #[serde(rename = "updatedAt")]
+    pub updated_at: i64,
+}
+
+/// 锁链：互斥组集合，同一锁链下同时只能激活一个变量组。
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Chain {
+    pub id: String,
+    pub name: String,
+    #[serde(rename = "createdAt")]
+    pub created_at: i64,
+    #[serde(rename = "updatedAt")]
+    pub updated_at: i64,
+}
+
+/// 变量组导入导出的 JSON 载体。
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GroupExportPayload {
+    #[serde(rename = "type")]
+    pub type_: String,
+    pub version: i32,
+    #[serde(rename = "exportedAt")]
+    pub exported_at: i64,
+    pub chains: Vec<ChainExport>,
+    pub groups: Vec<GroupExport>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ChainExport {
+    pub id: Option<String>,
+    pub name: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GroupExport {
+    pub name: String,
+    pub description: String,
+    pub variables: Vec<EnvVariable>,
+    #[serde(rename = "chainId")]
+    pub chain_id: Option<String>,
+    #[serde(rename = "createdAt")]
+    pub created_at: Option<i64>,
+}

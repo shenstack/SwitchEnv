@@ -22,7 +22,7 @@ pub fn run() {
         .setup(|app| {
             let app_dir = app.path().app_data_dir().expect("failed to get app data dir");
             std::fs::create_dir_all(&app_dir).expect("failed to create app data dir");
-            let db_path = app_dir.join("env-assistant.db");
+            let db_path = app_dir.join("SwitchEnv.db");
             let mut conn = rusqlite::Connection::open(&db_path).expect("failed to open database");
             db::run_migrations(&mut conn).expect("failed to run migrations");
 
@@ -46,6 +46,19 @@ pub fn run() {
             commands::group_commands::delete_group,
             commands::group_commands::activate_group,
             commands::group_commands::deactivate_group,
+            commands::template_commands::get_all_templates,
+            commands::template_commands::create_template,
+            commands::template_commands::update_template,
+            commands::template_commands::delete_template,
+            commands::chain_commands::get_all_chains,
+            commands::chain_commands::create_chain,
+            commands::chain_commands::update_chain,
+            commands::chain_commands::delete_chain,
+            commands::chain_commands::assign_group_to_chain,
+            commands::group_io_commands::export_groups,
+            commands::group_io_commands::import_groups,
+            commands::group_io_commands::batch_delete_groups,
+            commands::group_io_commands::detect_conflicts,
             commands::history_commands::get_history,
             commands::history_commands::restore_history,
             commands::history_commands::clear_history,

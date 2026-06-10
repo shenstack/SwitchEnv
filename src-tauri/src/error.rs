@@ -20,6 +20,10 @@ pub enum AppError {
     PermissionDenied(String),
     #[error("冲突检测: {0}")]
     Conflict(String),
+    #[error("验证错误: {0}")]
+    Validation(String),
+    #[error("其他错误: {0}")]
+    Other(String),
 }
 
 impl Serialize for AppError {

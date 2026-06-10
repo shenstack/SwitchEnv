@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { EnvVar, EnvGroup, ActivationResult, HistoryRecord, Backup, AppSettings, ShellConfigInfo } from '../types';
+import type { EnvVar, EnvGroup, ActivationResult, HistoryRecord, Backup, AppSettings, ShellConfigInfo, Template, Chain, EnvVarConflict } from '../types';
 
 // ===== 环境变量 =====
 export async function getAllEnvVars(isSystem: boolean): Promise<EnvVar[]> {
@@ -53,6 +53,82 @@ export async function activateGroup(id: string): Promise<ActivationResult> {
 
 export async function deactivateGroup(id: string): Promise<void> {
   return invoke('deactivate_group', { id });
+}
+
+/**
+ * 模板相关命令。
+ */
+export async function getAllTemplates(): Promise<Template[]> {
+  return invoke('get_all_templates');
+}
+
+export async function createTemplate(
+  name: string,
+  keys: string[],
+): Promise<Template> {
+  return invoke('create_template', { name, keys });
+}
+
+export async function updateTemplate(
+  id: string,
+  name: string,
+  keys: string[],
+): Promise<Template> {
+  return invoke('update_template', { id, name, keys });
+}
+
+export async function deleteTemplate(id: string): Promise<void> {
+  return invoke('delete_template', { id });
+}
+
+/**
+ * 锁链相关命令。
+ */
+export async function getAllChains(): Promise<Chain[]> {
+  return invoke('get_all_chains');
+}
+
+export async function createChain(name: string): Promise<Chain> {
+  return invoke('create_chain', { name });
+}
+
+export async function updateChain(id: string, name: string): Promise<Chain> {
+  return invoke('update_chain', { id, name });
+}
+
+export async function deleteChain(id: string): Promise<void> {
+  return invoke('delete_chain', { id });
+}
+
+export async function assignGroupToChain(
+  groupId: string,
+  chainId: string | null,
+): Promise<void> {
+  return invoke('assign_group_to_chain', { groupId, chainId });
+}
+
+/**
+ * 导入导出与批量删除相关命令。
+ */
+export async function exportGroups(
+  groupIds?: string[],
+  savePath?: string,
+): Promise<string> {
+  return invoke('export_groups', { groupIds, savePath });
+}
+
+export async function importGroups(json: string): Promise<number> {
+  return invoke('import_groups', { json });
+}
+
+export async function batchDeleteGroups(ids: string[]): Promise<number> {
+  return invoke('batch_delete_groups', { ids });
+}
+
+export async function detectConflicts(
+  groupId: string,
+): Promise<EnvVarConflict[]> {
+  return invoke('detect_conflicts', { groupId });
 }
 
 // ===== 历史记录 =====
