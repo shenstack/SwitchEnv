@@ -1,0 +1,293 @@
+<mxfile host="app.diagrams.net" modified="2026-06-10T00:00:00.000Z" agent="Mozilla/5.0" version="24.0.0" etag="layered-arch-v1">
+  <diagram id="layered-architecture" name="Layered Architecture">
+    <mxGraphModel dx="1600" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="2400" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="Switch-Env 分层架构图 (Layered Architecture)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="100" y="20" width="1000" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- Layer 1: Presentation Layer                                  -->
+        <!-- ============================================================ -->
+        <mxCell id="layer1-container" value="Layer 1 · 表现层 Presentation Layer" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=20;spacingTop=10;fontSize=16;fontStyle=1;strokeColor=#E88C3A;strokeWidth=2;fillColor=#FFF4E6;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="90" width="1000" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="layer1-tag" value="用户交互 / 界面渲染 / 状态管理" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#B85A1A;" vertex="1" parent="layer1-container">
+          <mxGeometry x="20" y="30" width="600" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="layer1-tech" value="技术栈: React 19 · TypeScript · Tailwind CSS · Zustand · Lucide React Icons" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#8A4A1A;" vertex="1" parent="layer1-container">
+          <mxGeometry x="20" y="50" width="960" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l1-box1" value="Pages" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD6A5;strokeColor=#E88C3A;fontColor=#6A3A0A;fontSize=12;strokeWidth=1;" vertex="1" parent="layer1-container">
+          <mxGeometry x="30" y="80" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="l1-box2" value="Components" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD6A5;strokeColor=#E88C3A;fontColor=#6A3A0A;fontSize=12;strokeWidth=1;" vertex="1" parent="layer1-container">
+          <mxGeometry x="170" y="80" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="l1-box3" value="Hooks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD6A5;strokeColor=#E88C3A;fontColor=#6A3A0A;fontSize=12;strokeWidth=1;" vertex="1" parent="layer1-container">
+          <mxGeometry x="330" y="80" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="l1-box4" value="Store (Zustand)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFD6A5;strokeColor=#E88C3A;fontColor=#6A3A0A;fontSize=12;strokeWidth=1;" vertex="1" parent="layer1-container">
+          <mxGeometry x="470" y="80" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="l1-right" value="React UI Components" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#B85A1A;" vertex="1" parent="layer1-container">
+          <mxGeometry x="680" y="90" width="280" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow L1 -> L2 -->
+        <mxCell id="arrow-l1-l2" value="invoke() / 命令请求" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#888888;fontSize=11;fontColor=#555555;strokeWidth=1.5;" edge="1" parent="1" source="layer1-container" target="layer2-container">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="255" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="260" />
+              <mxPoint x="600" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- Layer 2: IPC Bridge Layer                                    -->
+        <!-- ============================================================ -->
+        <mxCell id="layer2-container" value="Layer 2 · IPC 通信层 IPC Bridge Layer" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=20;spacingTop=10;fontSize=16;fontStyle=1;strokeColor=#D97A6B;strokeWidth=2;fillColor=#FCE4DC;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="280" width="1000" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="layer2-tag" value="前后端双向通信 / 类型安全" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#A04A3A;" vertex="1" parent="layer2-container">
+          <mxGeometry x="20" y="30" width="600" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="layer2-tech" value="技术栈: @tauri-apps/api/core · Tauri IPC" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#8A3A2A;" vertex="1" parent="layer2-container">
+          <mxGeometry x="20" y="50" width="960" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l2-box1" value="前端 API&#xa;services/ipc.ts&#xa;invoke()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5BFB0;strokeColor=#D97A6B;fontColor=#5A1A0A;fontSize=12;strokeWidth=1;align=center;" vertex="1" parent="layer2-container">
+          <mxGeometry x="30" y="80" width="320" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="l2-box2" value="Rust 后端命令&#xa;#[tauri::command]&#xa;宏注册" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5BFB0;strokeColor=#D97A6B;fontColor=#5A1A0A;fontSize=12;strokeWidth=1;align=center;" vertex="1" parent="layer2-container">
+          <mxGeometry x="370" y="80" width="320" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="l2-right" value="↔ 双向通信" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#A04A3A;" vertex="1" parent="layer2-container">
+          <mxGeometry x="720" y="90" width="260" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow L2 -> L3 -->
+        <mxCell id="arrow-l2-l3" value="分发命令 / 调用 Command" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#888888;fontSize=11;fontColor=#555555;strokeWidth=1.5;" edge="1" parent="1" source="layer2-container" target="layer3-container">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="435" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="440" />
+              <mxPoint x="600" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- Layer 3: Command Layer                                       -->
+        <!-- ============================================================ -->
+        <mxCell id="layer3-container" value="Layer 3 · 命令层 Command Layer" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=20;spacingTop=10;fontSize=16;fontStyle=1;strokeColor=#B07ACC;strokeWidth=2;fillColor=#F3E6F7;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="460" width="1000" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="layer3-tag" value="API 入口 / 参数校验 / 响应组装" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#7A3A9A;" vertex="1" parent="layer3-container">
+          <mxGeometry x="20" y="30" width="600" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Row 1: 3 command modules -->
+        <mxCell id="l3-c1" value="env_commands.rs&#xa;· get_all_env_vars&#xa;· set_env_var / remove_env_var&#xa;· can_modify_system&#xa;· refresh_environment&#xa;· open_system_settings&#xa;· get_shell_config_info" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E5CEF0;strokeColor=#B07ACC;fontColor=#4A1A6A;fontSize=11;strokeWidth=1;align=left;spacingLeft=8;spacingTop=6;" vertex="1" parent="layer3-container">
+          <mxGeometry x="30" y="55" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="l3-c2" value="group_commands.rs&#xa;· get_all_groups&#xa;· create_group / update_group / delete_group&#xa;· activate_group&#xa;· deactivate_group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E5CEF0;strokeColor=#B07ACC;fontColor=#4A1A6A;fontSize=11;strokeWidth=1;align=left;spacingLeft=8;spacingTop=6;" vertex="1" parent="layer3-container">
+          <mxGeometry x="350" y="55" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="l3-c3" value="history_commands.rs&#xa;· get_history&#xa;· restore_history&#xa;· clear_history" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E5CEF0;strokeColor=#B07ACC;fontColor=#4A1A6A;fontSize=11;strokeWidth=1;align=left;spacingLeft=8;spacingTop=6;" vertex="1" parent="layer3-container">
+          <mxGeometry x="670" y="55" width="300" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Row 2: 3 command modules -->
+        <mxCell id="l3-c4" value="backup_commands.rs&#xa;· create_backup / get_all_backups&#xa;· restore_backup / delete_backup&#xa;· export_backup / import_backup" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E5CEF0;strokeColor=#B07ACC;fontColor=#4A1A6A;fontSize=11;strokeWidth=1;align=left;spacingLeft=8;spacingTop=6;" vertex="1" parent="layer3-container">
+          <mxGeometry x="30" y="160" width="300" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="l3-c5" value="settings_commands.rs&#xa;· get_app_settings&#xa;· set_app_settings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E5CEF0;strokeColor=#B07ACC;fontColor=#4A1A6A;fontSize=11;strokeWidth=1;align=left;spacingLeft=8;spacingTop=6;" vertex="1" parent="layer3-container">
+          <mxGeometry x="350" y="160" width="300" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="l3-c6" value="utils_commands.rs&#xa;· copy_to_clipboard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E5CEF0;strokeColor=#B07ACC;fontColor=#4A1A6A;fontSize=11;strokeWidth=1;align=left;spacingLeft=8;spacingTop=6;" vertex="1" parent="layer3-container">
+          <mxGeometry x="670" y="160" width="300" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow L3 -> L4 -->
+        <mxCell id="arrow-l3-l4" value="调用业务服务 / 执行操作" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#888888;fontSize=11;fontColor=#555555;strokeWidth=1.5;" edge="1" parent="1" source="layer3-container" target="layer4-container">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="705" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="710" />
+              <mxPoint x="600" y="720" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- Layer 4: Service Layer                                       -->
+        <!-- ============================================================ -->
+        <mxCell id="layer4-container" value="Layer 4 · 业务服务层 Service Layer" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=20;spacingTop=10;fontSize=16;fontStyle=1;strokeColor=#7A8ACC;strokeWidth=2;fillColor=#E1E7F7;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="730" width="1000" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="layer4-tag" value="业务逻辑 / 事务编排 / 冲突处理" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#3A4A8A;" vertex="1" parent="layer4-container">
+          <mxGeometry x="20" y="30" width="600" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l4-s1" value="EnvService&#xa;· activate_group()&#xa;· deactivate_group()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C9D4F0;strokeColor=#7A8ACC;fontColor=#1A2A6A;fontSize=12;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer4-container">
+          <mxGeometry x="30" y="60" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l4-s2" value="冲突检测算法&#xa;Conflict Detection&#xa;&#xa;(检测同名变量冲突 /&#xa;chain_id 互斥校验)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C9D4F0;strokeColor=#7A8ACC;fontColor=#1A2A6A;fontSize=12;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer4-container">
+          <mxGeometry x="350" y="60" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l4-s3" value="链式组处理&#xa;Chain Processing&#xa;&#xa;(chain_id 互斥逻辑 /&#xa;历史记录自动保存)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C9D4F0;strokeColor=#7A8ACC;fontColor=#1A2A6A;fontSize=12;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer4-container">
+          <mxGeometry x="670" y="60" width="300" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow L4 -> L5 -->
+        <mxCell id="arrow-l4-l5" value="写入 before/after 快照 / SQL CRUD" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#888888;fontSize=11;fontColor=#555555;strokeWidth=1.5;" edge="1" parent="1" source="layer4-container" target="layer5-container">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="925" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="930" />
+              <mxPoint x="600" y="940" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- Layer 5: Repository Layer                                    -->
+        <!-- ============================================================ -->
+        <mxCell id="layer5-container" value="Layer 5 · 数据仓储层 Repository Layer" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=20;spacingTop=10;fontSize=16;fontStyle=1;strokeColor=#6AB0C0;strokeWidth=2;fillColor=#E0F0F4;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="950" width="1000" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="layer5-tag" value="数据访问 / 持久化抽象" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#2A6A7A;" vertex="1" parent="layer5-container">
+          <mxGeometry x="20" y="30" width="600" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="layer5-tech" value="技术栈: rusqlite raw SQL + params! 宏" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#2A5A6A;" vertex="1" parent="layer5-container">
+          <mxGeometry x="20" y="50" width="960" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l5-r1" value="EnvGroupRepository&#xa;· CRUD 基础操作&#xa;· get_active_by_chain()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BFDEE7;strokeColor=#6AB0C0;fontColor=#0A3A4A;fontSize=12;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer5-container">
+          <mxGeometry x="30" y="80" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l5-r2" value="HistoryRepository&#xa;· CRUD 基础操作&#xa;· clear_by_type()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BFDEE7;strokeColor=#6AB0C0;fontColor=#0A3A4A;fontSize=12;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer5-container">
+          <mxGeometry x="350" y="80" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l5-r3" value="BackupRepository&#xa;· CRUD 基础操作" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BFDEE7;strokeColor=#6AB0C0;fontColor=#0A3A4A;fontSize=12;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer5-container">
+          <mxGeometry x="670" y="80" width="300" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow L5 -> L6 -->
+        <mxCell id="arrow-l5-l6" value="执行 SQL / 查询数据库" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#888888;fontSize=11;fontColor=#555555;strokeWidth=1.5;" edge="1" parent="1" source="layer5-container" target="layer6-container">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="1165" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="1170" />
+              <mxPoint x="600" y="1180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Also arrow from L5 to L7 (DB) -->
+        <mxCell id="arrow-l5-l7" value="SQL 操作 → SQLite" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#6A9A5A;dashed=1;dashPattern=1 2;fontSize=11;fontColor=#4A7A3A;strokeWidth=1.5;" edge="1" parent="1" source="layer5-container" target="layer7-container">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1050" y="1500" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1050" y="1160" />
+              <mxPoint x="1050" y="1500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Also arrow from L4 to L6 (platform call) -->
+        <mxCell id="arrow-l4-l6" value="系统调用 (修改环境变量)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#6A5A9A;dashed=1;dashPattern=1 2;fontSize=11;fontColor=#4A3A7A;strokeWidth=1.5;" edge="1" parent="1" source="layer4-container" target="layer6-container">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="1180" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="150" y="920" />
+              <mxPoint x="150" y="1180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- Layer 6: Platform Layer                                      -->
+        <!-- ============================================================ -->
+        <mxCell id="layer6-container" value="Layer 6 · 平台适配层 Platform Layer" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=20;spacingTop=10;fontSize=16;fontStyle=1;strokeColor=#6AB07A;strokeWidth=2;fillColor=#DEF5E0;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1190" width="1000" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="layer6-tag" value="跨平台抽象 / OS API 封装" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#2A6A3A;" vertex="1" parent="layer6-container">
+          <mxGeometry x="20" y="30" width="600" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l6-p0" value="PlatformService trait&#xa;(async trait)&#xa;· get_env_vars&#xa;· set_env_var / remove_env_var&#xa;· can_modify_system&#xa;· refresh_environment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C0E8C6;strokeColor=#6AB07A;fontColor=#0A3A1A;fontSize=11;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer6-container">
+          <mxGeometry x="30" y="55" width="230" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="l6-p1" value="WindowsPlatformService&#xa;· reg.exe 读写注册表&#xa;· setx 永久设置&#xa;· rundll32 user32.dll 刷新环境" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C0E8C6;strokeColor=#6AB07A;fontColor=#0A3A1A;fontSize=11;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer6-container">
+          <mxGeometry x="275" y="55" width="225" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="l6-p2" value="MacOSPlatformService&#xa;· launchctl setenv / unsetenv&#xa;· ShellProfileManager 写入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C0E8C6;strokeColor=#6AB07A;fontColor=#0A3A1A;fontSize=11;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer6-container">
+          <mxGeometry x="515" y="55" width="225" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="l6-p3" value="LinuxPlatformService&#xa;· /etc/environment 读写&#xa;· pkexec 提权&#xa;· ShellProfileManager 写入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C0E8C6;strokeColor=#6AB07A;fontColor=#0A3A1A;fontSize=11;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer6-container">
+          <mxGeometry x="755" y="55" width="225" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l6-spm" value="ShellProfileManager&#xa;· MARKER 标记的 ~/.zshrc / ~/.bashrc 读写 / 变量持久化 / Markdown 注释占位" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C0E8C6;strokeColor=#6AB07A;fontColor=#0A3A1A;fontSize=11;strokeWidth=1;align=center;" vertex="1" parent="layer6-container">
+          <mxGeometry x="30" y="185" width="950" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow L6 -> L7 -->
+        <mxCell id="arrow-l6-l7" value="OS 系统调用 / Shell 执行" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;strokeColor=#888888;fontSize=11;fontColor=#555555;strokeWidth=1.5;" edge="1" parent="1" source="layer6-container" target="layer7-container">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="1445" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="1450" />
+              <mxPoint x="600" y="1460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- Layer 7: Infrastructure Layer                                -->
+        <!-- ============================================================ -->
+        <mxCell id="layer7-container" value="Layer 7 · 基础设施层 Infrastructure Layer" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=20;spacingTop=10;fontSize=16;fontStyle=1;strokeColor=#888888;strokeWidth=2;fillColor=#F0F0F0;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1470" width="1000" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="layer7-tag" value="数据存储 / 并发安全 / 系统插件" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#555555;" vertex="1" parent="layer7-container">
+          <mxGeometry x="20" y="30" width="600" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l7-i1" value="SQLite Database&#xa;· 本地文件 env-assistant.db&#xa;· rusqlite_migration&#xa;· schema.sql 自动迁移" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DADADA;strokeColor=#888888;fontColor=#2A2A2A;fontSize=12;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer7-container">
+          <mxGeometry x="30" y="55" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l7-i2" value="AppState&#xa;· tokio::sync::Mutex&#xa;· 包裹 Connection &amp; PlatformService&#xa;· 并发安全共享状态" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DADADA;strokeColor=#888888;fontColor=#2A2A2A;fontSize=12;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer7-container">
+          <mxGeometry x="350" y="55" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="l7-i3" value="Tauri Plugins&#xa;· clipboard-manager&#xa;· notification&#xa;· dialog&#xa;· fs / shell" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DADADA;strokeColor=#888888;fontColor=#2A2A2A;fontSize=12;strokeWidth=1;align=left;spacingLeft=10;spacingTop=8;" vertex="1" parent="layer7-container">
+          <mxGeometry x="670" y="55" width="300" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l7-note" value="底层支撑: 数据持久化 + 并发控制 + 系统能力封装" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=2;fontColor=#555555;" vertex="1" parent="layer7-container">
+          <mxGeometry x="30" y="175" width="940" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom legend / note -->
+        <mxCell id="legend-title" value="数据流向说明" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1730" width="1000" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-box1" value="主调用链: Presentation → IPC → Command → Service → Repository → Platform → Infrastructure" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#AAAAAA;fontColor=#333333;fontSize=11;strokeWidth=1;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1760" width="1000" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-box2" value="跨层调用(虚线): ① Service 可直接调用 Platform 修改系统环境变量 ② Repository 直接操作 SQLite 数据库" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#AAAAAA;fontColor=#333333;fontSize=11;strokeWidth=1;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1805" width="1000" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

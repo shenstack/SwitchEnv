@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2200 1600" width="2200" height="1600" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1B5E20"/></marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6A1B9A"/></marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#E65100"/></marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#C62828"/></marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#424242"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#00695C"/></marker>
+    <marker id="arrow-yellow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#F9A825"/></marker>
+  </defs>
+
+  <rect x="0" y="0" width="2200" height="1600" fill="#FAFAFA"/>
+  <text x="1100" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="#333333">Switch-Env 模块依赖关系图 (Module Dependency Graph)</text>
+
+  <!-- Legend -->
+  <g transform="translate(50,70)">
+    <rect x="0" y="0" width="420" height="90" rx="6" ry="6" fill="#FFFFFF" stroke="#CCC"/>
+    <text x="10" y="20" font-size="13" font-weight="bold">Legend · 图例</text>
+    <circle cx="25" cy="45" r="7" fill="#C8E6C9" stroke="#1B5E20" stroke-width="1.5"/><text x="40" y="49" font-size="11">Rust 后端模块</text>
+    <circle cx="185" cy="45" r="7" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.5"/><text x="200" y="49" font-size="11">前端模块</text>
+    <circle cx="25" cy="70" r="7" fill="#FFE0B2" stroke="#E65100" stroke-width="1.5"/><text x="40" y="74" font-size="11">数据模型层</text>
+    <circle cx="185" cy="70" r="7" fill="#F5BFB0" stroke="#C62828" stroke-width="1.5"/><text x="200" y="74" font-size="11">统一错误类型</text>
+    <circle cx="320" cy="70" r="7" fill="#B2DFDB" stroke="#00695C" stroke-width="1.5"/><text x="335" y="74" font-size="11">数据库层</text>
+  </g>
+
+  <!-- ============ 前端区域 (紫色系) ============ -->
+  <rect x="1580" y="70" width="580" height="860" rx="10" ry="10" fill="#FCE4F5" stroke="#6A1B9A" stroke-width="2" fill-opacity="0.25"/>
+  <text x="1610" y="95" font-size="16" font-weight="bold" fill="#6A1B9A">Frontend · 前端模块</text>
+
+  <rect x="1780" y="115" width="180" height="50" rx="8" ry="8" fill="#D8C4E0" stroke="#6A1B9A" stroke-width="2"/>
+  <text x="1870" y="138" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E0854">main.tsx (React Entry)</text>
+
+  <rect x="1620" y="185" width="500" height="55" rx="8" ry="8" fill="#E8D4F0" stroke="#7B1FA2" stroke-width="1.5"/>
+  <text x="1870" y="208" text-anchor="middle" font-size="12" font-weight="bold" fill="#2E0854">App.tsx · 根组件 · Tab 切换 · ToastProvider · useTheme</text>
+  <text x="1870" y="228" text-anchor="middle" font-size="10" fill="#2E0854">pages / components / hooks / stores / services / types</text>
+
+  <rect x="1620" y="265" width="500" height="85" rx="8" ry="8" fill="#F3E5F5" stroke="#9C27B0" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="1870" y="285" text-anchor="middle" font-size="12" font-weight="bold" fill="#6A1B9A">Pages / 页面</text>
+  <rect x="1630" y="298" width="115" height="42" rx="6" ry="6" fill="#E1BEE7" stroke="#8E24AA"/><text x="1687" y="323" text-anchor="middle" font-size="11" fill="#2E0854">EnvVarManager</text>
+  <rect x="1755" y="298" width="115" height="42" rx="6" ry="6" fill="#E1BEE7" stroke="#8E24AA"/><text x="1812" y="323" text-anchor="middle" font-size="11" fill="#2E0854">SystemVars</text>
+  <rect x="1880" y="298" width="115" height="42" rx="6" ry="6" fill="#E1BEE7" stroke="#8E24AA"/><text x="1937" y="323" text-anchor="middle" font-size="11" fill="#2E0854">HistoryPage</text>
+  <rect x="2005" y="298" width="110" height="42" rx="6" ry="6" fill="#E1BEE7" stroke="#8E24AA"/><text x="2060" y="323" text-anchor="middle" font-size="11" fill="#2E0854">SettingsPage</text>
+
+  <rect x="1620" y="370" width="160" height="75" rx="6" ry="6" fill="#E8D4F0" stroke="#7B1FA2" stroke-width="1.2"/>
+  <text x="1700" y="388" text-anchor="middle" font-size="11" font-weight="bold" fill="#2E0854">components/</text>
+  <text x="1700" y="405" text-anchor="middle" font-size="10" fill="#2E0854">ConfirmDialog, Modal</text>
+  <text x="1700" y="422" text-anchor="middle" font-size="10" fill="#2E0854">SearchBar, ToastProvider</text>
+
+  <rect x="1790" y="370" width="160" height="75" rx="6" ry="6" fill="#E8D4F0" stroke="#7B1FA2" stroke-width="1.2"/>
+  <text x="1870" y="388" text-anchor="middle" font-size="11" font-weight="bold" fill="#2E0854">stores/useAppStore.ts</text>
+  <text x="1870" y="405" text-anchor="middle" font-size="10" fill="#2E0854">Zustand 全局状态</text>
+  <text x="1870" y="422" text-anchor="middle" font-size="10" fill="#2E0854">(缓存 AppSettings)</text>
+
+  <rect x="1960" y="370" width="160" height="75" rx="6" ry="6" fill="#E8D4F0" stroke="#7B1FA2" stroke-width="1.2"/>
+  <text x="2040" y="388" text-anchor="middle" font-size="11" font-weight="bold" fill="#2E0854">hooks/useTheme.ts</text>
+  <text x="2040" y="405" text-anchor="middle" font-size="10" fill="#2E0854">深色/浅色/跟随</text>
+  <text x="2040" y="422" text-anchor="middle" font-size="10" fill="#2E0854">系统主题切换</text>
+
+  <rect x="1620" y="465" width="235" height="85" rx="6" ry="6" fill="#E8D4F0" stroke="#7B1FA2" stroke-width="1.2"/>
+  <text x="1737" y="485" text-anchor="middle" font-size="11" font-weight="bold" fill="#2E0854">types/index.ts</text>
+  <text x="1737" y="502" text-anchor="middle" font-size="10" fill="#2E0854">TypeScript 接口</text>
+  <text x="1737" y="517" text-anchor="middle" font-size="10" fill="#2E0854">EnvVar, EnvGroup, HistoryRecord</text>
+  <text x="1737" y="534" text-anchor="middle" font-size="10" fill="#2E0854">Backup, AppSettings, ...</text>
+
+  <rect x="1865" y="465" width="255" height="85" rx="8" ry="8" fill="#CE93D8" stroke="#6A1B9A" stroke-width="2"/>
+  <text x="1992" y="488" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E0854">services/ipc.ts</text>
+  <text x="1992" y="507" text-anchor="middle" font-size="11" fill="#2E0854">invoke() 封装</text>
+  <text x="1992" y="525" text-anchor="middle" font-size="11" fill="#2E0854">↔ Rust commands (1:1 对齐)</text>
+  <text x="1992" y="542" text-anchor="middle" font-size="10" font-weight="bold" fill="#4A148C">[跨语言 IPC 通信桥]</text>
+
+  <!-- ============ IPC Bridge ============ -->
+  <rect x="1300" y="465" width="270" height="85" rx="8" ry="8" fill="#ECEFF1" stroke="#424242" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="1435" y="488" text-anchor="middle" font-size="13" font-weight="bold" fill="#212121">Tauri IPC Bridge</text>
+  <text x="1435" y="507" text-anchor="middle" font-size="11" fill="#424242">invoke() / JSON 序列化</text>
+  <text x="1435" y="525" text-anchor="middle" font-size="11" fill="#424242">#[tauri::command] 宏注册</text>
+  <text x="1435" y="542" text-anchor="middle" font-size="10" font-style="italic" fill="#616161">[Cross-language]</text>
+
+  <!-- ============ 后端入口 & 共享层 ============ -->
+  <rect x="50" y="70" width="1230" height="135" rx="10" ry="10" fill="#E8F5E9" stroke="#1B5E20" stroke-width="2" fill-opacity="0.4"/>
+  <text x="80" y="95" font-size="16" font-weight="bold" fill="#1B5E20">Backend · Rust 后端模块 · 入口层</text>
+
+  <rect x="80" y="108" width="220" height="80" rx="10" ry="10" fill="#81C784" stroke="#1B5E20" stroke-width="2.5"/>
+  <text x="190" y="133" text-anchor="middle" font-size="14" font-weight="bold" fill="#0D3311">lib.rs</text>
+  <text x="190" y="153" text-anchor="middle" font-size="11" fill="#0D3311">Rust 库入口</text>
+  <text x="190" y="170" text-anchor="middle" font-size="10" fill="#0D3311">Tauri Builder</text>
+  <text x="190" y="183" text-anchor="middle" font-size="10" fill="#0D3311">manage(AppState) + invoke_handler</text>
+
+  <rect x="320" y="108" width="300" height="90" rx="10" ry="10" fill="#A5D6A7" stroke="#2E7D32" stroke-width="2"/>
+  <text x="470" y="131" text-anchor="middle" font-size="13" font-weight="bold" fill="#0D3311">state.rs · AppState</text>
+  <text x="470" y="151" text-anchor="middle" font-size="11" fill="#0D3311">db: Mutex&lt;Option&lt;Connection&gt;&gt;</text>
+  <text x="470" y="170" text-anchor="middle" font-size="11" fill="#0D3311">platform: Mutex&lt;Option&lt;Box&lt;dyn</text>
+  <text x="470" y="186" text-anchor="middle" font-size="11" fill="#0D3311">PlatformService&gt;&gt;</text>
+
+  <rect x="640" y="108" width="180" height="90" rx="8" ry="8" fill="#FFE0B2" stroke="#E65100" stroke-width="1.8"/>
+  <text x="730" y="131" text-anchor="middle" font-size="13" font-weight="bold" fill="#4E2A00">models/mod.rs</text>
+  <text x="730" y="151" text-anchor="middle" font-size="10" fill="#4E2A00">EnvVar, EnvVariable, EnvGroup</text>
+  <text x="730" y="166" text-anchor="middle" font-size="10" fill="#4E2A00">HistoryRecord, Backup</text>
+  <text x="730" y="181" text-anchor="middle" font-size="10" fill="#4E2A00">AppSettings, ThemeSettings...</text>
+
+  <rect x="840" y="108" width="180" height="90" rx="8" ry="8" fill="#F5BFB0" stroke="#C62828" stroke-width="1.8"/>
+  <text x="930" y="131" text-anchor="middle" font-size="13" font-weight="bold" fill="#4A0E0E">error.rs</text>
+  <text x="930" y="151" text-anchor="middle" font-size="10" fill="#4A0E0E">AppError: Platform, Database</text>
+  <text x="930" y="166" text-anchor="middle" font-size="10" fill="#4A0E0E">Serialization, Io</text>
+  <text x="930" y="181" text-anchor="middle" font-size="10" fill="#4A0E0E">NotFound, PermissionDenied, Conflict</text>
+  <text x="930" y="196" text-anchor="middle" font-size="10" font-style="italic" fill="#4A0E0E">+ AppResult&lt;T&gt;</text>
+
+  <rect x="1040" y="108" width="240" height="90" rx="8" ry="8" fill="#B2DFDB" stroke="#00695C" stroke-width="1.5"/>
+  <text x="1160" y="131" text-anchor="middle" font-size="13" font-weight="bold" fill="#004D40">db / 数据库层</text>
+  <text x="1160" y="151" text-anchor="middle" font-size="10" fill="#004D40">migrations.rs</text>
+  <text x="1160" y="166" text-anchor="middle" font-size="10" fill="#004D40">schema.sql</text>
+  <text x="1160" y="181" text-anchor="middle" font-size="10" fill="#004D40">SQLite Connection 管理</text>
+  <text x="1160" y="196" text-anchor="middle" font-size="10" fill="#00695C">[env_groups, trash_history, backups]</text>
+
+  <!-- ============ commands 命令层 ============ -->
+  <text x="80" y="258" font-size="15" font-weight="bold" fill="#1B5E20">commands / 命令层 · 6 个命令模块</text>
+
+  <rect x="80" y="272" width="180" height="85" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="170" y="292" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">env_commands.rs</text>
+  <text x="170" y="312" text-anchor="middle" font-size="10" fill="#0D3311">读取/写入环境变量</text>
+  <text x="170" y="329" text-anchor="middle" font-size="10" fill="#0D3311">state(platform)</text>
+  <text x="170" y="349" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">→ PlatformService</text>
+
+  <rect x="270" y="272" width="180" height="85" rx="8" ry="8" fill="#A5D6A7" stroke="#2E7D32" stroke-width="2"/>
+  <text x="360" y="292" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">group_commands.rs</text>
+  <text x="360" y="312" text-anchor="middle" font-size="10" fill="#0D3311">分组 CRUD + 激活</text>
+  <text x="360" y="329" text-anchor="middle" font-size="10" fill="#0D3311">state(db+platform)</text>
+  <text x="360" y="349" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">→ env_service + 存储库</text>
+
+  <rect x="460" y="272" width="180" height="85" rx="8" ry="8" fill="#A5D6A7" stroke="#2E7D32" stroke-width="2"/>
+  <text x="550" y="292" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">history_commands.rs</text>
+  <text x="550" y="312" text-anchor="middle" font-size="10" fill="#0D3311">历史记录 / 回收站</text>
+  <text x="550" y="329" text-anchor="middle" font-size="10" fill="#0D3311">state(db+platform)</text>
+  <text x="550" y="349" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">→ env_service + 存储库</text>
+
+  <rect x="650" y="272" width="180" height="85" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="740" y="292" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">backup_commands.rs</text>
+  <text x="740" y="312" text-anchor="middle" font-size="10" fill="#0D3311">备份 / 导入 / 导出</text>
+  <text x="740" y="329" text-anchor="middle" font-size="10" fill="#0D3311">state(db+platform)</text>
+  <text x="740" y="349" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">→ backup_repo 直接 CRUD</text>
+
+  <rect x="840" y="272" width="180" height="85" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="930" y="292" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">settings_commands.rs</text>
+  <text x="930" y="312" text-anchor="middle" font-size="10" fill="#0D3311">应用配置 / 主题设置</text>
+  <text x="930" y="329" text-anchor="middle" font-size="10" fill="#0D3311">state(db)</text>
+  <text x="930" y="349" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">→ 直接 SQLite params</text>
+
+  <rect x="1030" y="272" width="170" height="85" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="1115" y="292" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">utils_commands.rs</text>
+  <text x="1115" y="312" text-anchor="middle" font-size="10" fill="#0D3311">工具函数</text>
+  <text x="1115" y="329" text-anchor="middle" font-size="10" fill="#0D3311">tauri::AppHandle</text>
+  <text x="1115" y="349" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">→ clipboard-manager</text>
+
+  <!-- ============ services 业务服务层 ============ -->
+  <text x="80" y="398" font-size="15" font-weight="bold" fill="#1B5E20">services / 业务服务层</text>
+
+  <rect x="80" y="412" width="520" height="85" rx="10" ry="10" fill="#81C784" stroke="#1B5E20" stroke-width="2.5"/>
+  <text x="340" y="435" text-anchor="middle" font-size="14" font-weight="bold" fill="#0D3311">services/env_service.rs · 核心业务服务</text>
+  <text x="340" y="455" text-anchor="middle" font-size="11" fill="#0D3311">依赖: PlatformService trait + env_group_repo + history_repo + models + error</text>
+  <text x="340" y="472" text-anchor="middle" font-size="11" fill="#0D3311">核心职责: 分组激活/停用 · 平台环境变量同步 · 历史记录管理 · 冲突检测</text>
+  <text x="340" y="490" text-anchor="middle" font-size="10" font-style="italic" fill="#1B5E20">[被 group_commands / history_commands 调用]</text>
+
+  <!-- ============ repositories 仓储层 ============ -->
+  <text x="80" y="530" font-size="15" font-weight="bold" fill="#1B5E20">repositories / 仓储层 · 3 个 SQLite 存储库</text>
+
+  <rect x="80" y="545" width="240" height="90" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="200" y="565" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D3311">env_group_repo.rs</text>
+  <text x="200" y="585" text-anchor="middle" font-size="10" fill="#0D3311">rusqlite::Connection</text>
+  <text x="200" y="603" text-anchor="middle" font-size="10" fill="#0D3311">表: env_groups</text>
+  <text x="200" y="620" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">CRUD · 分组数据持久化</text>
+
+  <rect x="330" y="545" width="240" height="90" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="450" y="565" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D3311">history_repo.rs</text>
+  <text x="450" y="585" text-anchor="middle" font-size="10" fill="#0D3311">rusqlite::Connection</text>
+  <text x="450" y="603" text-anchor="middle" font-size="10" fill="#0D3311">表: trash_history</text>
+  <text x="450" y="620" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">CRUD · 历史/回收站</text>
+
+  <rect x="580" y="545" width="240" height="90" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="700" y="565" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D3311">backup_repo.rs</text>
+  <text x="700" y="585" text-anchor="middle" font-size="10" fill="#0D3311">rusqlite::Connection</text>
+  <text x="700" y="603" text-anchor="middle" font-size="10" fill="#0D3311">表: backups</text>
+  <text x="700" y="620" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">CRUD · 备份元数据</text>
+
+  <!-- ============ platforms 平台适配层 ============ -->
+  <text x="80" y="675" font-size="15" font-weight="bold" fill="#1B5E20">platforms / 平台适配层 · Trait + 多平台实现</text>
+
+  <rect x="80" y="690" width="240" height="110" rx="8" ry="8" fill="#81C784" stroke="#1B5E20" stroke-width="2.5"/>
+  <text x="200" y="713" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D3311">platforms/mod.rs</text>
+  <text x="200" y="733" text-anchor="middle" font-size="11" fill="#0D3311">PlatformService trait</text>
+  <text x="200" y="750" text-anchor="middle" font-size="10" fill="#0D3311">trait: read/write/delete/list</text>
+  <text x="200" y="768" text-anchor="middle" font-size="10" fill="#0D3311">+ PlatformError + factory</text>
+  <text x="200" y="788" text-anchor="middle" font-size="9" font-style="italic" fill="#1B5E20">[抽象层: 被 env_service 调用]</text>
+
+  <rect x="330" y="690" width="240" height="110" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="450" y="713" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D3311">windows.rs</text>
+  <text x="450" y="733" text-anchor="middle" font-size="10" fill="#0D3311">WindowsPlatformService</text>
+  <text x="450" y="750" text-anchor="middle" font-size="10" fill="#0D3311">reg query / reg add</text>
+  <text x="450" y="765" text-anchor="middle" font-size="10" fill="#0D3311">setx / rundll32</text>
+  <text x="450" y="783" text-anchor="middle" font-size="10" fill="#0D3311">PowerShell (提升权限)</text>
+  <text x="450" y="798" text-anchor="middle" font-size="9" fill="#388E3C">[注册表: HKCU / HKLM\SYSTEM]</text>
+
+  <rect x="580" y="690" width="240" height="110" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="700" y="713" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D3311">macos.rs</text>
+  <text x="700" y="733" text-anchor="middle" font-size="10" fill="#0D3311">MacOSPlatformService</text>
+  <text x="700" y="750" text-anchor="middle" font-size="10" fill="#0D3311">launchctl (系统级)</text>
+  <text x="700" y="765" text-anchor="middle" font-size="10" fill="#0D3311">ShellProfileManager</text>
+  <text x="700" y="783" text-anchor="middle" font-size="10" fill="#0D3311">~/.zshrc / ~/.bash_profile</text>
+  <text x="700" y="798" text-anchor="middle" font-size="9" fill="#388E3C">[用户级 / 系统级 Shell 配置]</text>
+
+  <rect x="830" y="690" width="240" height="110" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="950" y="713" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D3311">linux.rs</text>
+  <text x="950" y="733" text-anchor="middle" font-size="10" fill="#0D3311">LinuxPlatformService</text>
+  <text x="950" y="750" text-anchor="middle" font-size="10" fill="#0D3311">/etc/environment (系统级)</text>
+  <text x="950" y="765" text-anchor="middle" font-size="10" fill="#0D3311">pkexec bash script (提权)</text>
+  <text x="950" y="783" text-anchor="middle" font-size="10" fill="#0D3311">ShellProfileManager</text>
+  <text x="950" y="798" text-anchor="middle" font-size="9" fill="#388E3C">[~/.bashrc / ~/.zshrc]</text>
+
+  <rect x="1080" y="690" width="220" height="110" rx="8" ry="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="1190" y="713" text-anchor="middle" font-size="12" font-weight="bold" fill="#0D3311">shell_profile.rs</text>
+  <text x="1190" y="733" text-anchor="middle" font-size="10" fill="#0D3311">ShellProfileManager</text>
+  <text x="1190" y="750" text-anchor="middle" font-size="10" fill="#0D3311">MARKER_START / END</text>
+  <text x="1190" y="765" text-anchor="middle" font-size="10" fill="#0D3311">包裹的 export 行</text>
+  <text x="1190" y="783" text-anchor="middle" font-size="10" fill="#0D3311">读写 / 去重 / 排序</text>
+  <text x="1190" y="798" text-anchor="middle" font-size="9" fill="#388E3C">[跨平台 Shell 配置管理]</text>
+
+  <!-- ============ OS 系统层 ============ -->
+  <rect x="80" y="830" width="1220" height="75" rx="10" ry="10" fill="#FFF9C4" stroke="#F9A825" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="690" y="855" text-anchor="middle" font-size="14" font-weight="bold" fill="#4E3A00">Operating System · 操作系统层</text>
+  <text x="690" y="877" text-anchor="middle" font-size="11" fill="#4E3A00">Windows 注册表 (HKCU/HKLM) · macOS launchctl · Linux /etc/environment · Shell 配置文件 (.zshrc/.bashrc)</text>
+  <text x="690" y="895" text-anchor="middle" font-size="11" fill="#4E3A00">文件系统 / 进程环境 · 系统环境变量持久化存储</text>
+
+  <!-- ============ 跨语言类型对齐区域 ============ -->
+  <rect x="1580" y="680" width="580" height="250" rx="10" ry="10" fill="#FFF8E1" stroke="#E65100" stroke-width="1.5" fill-opacity="0.3"/>
+  <text x="1610" y="705" font-size="13" font-weight="bold" fill="#E65100">跨语言类型对齐 &amp; 共享层</text>
+
+  <rect x="1600" y="718" width="275" height="125" rx="8" ry="8" fill="#FFE0B2" stroke="#E65100" stroke-width="1.8"/>
+  <text x="1737" y="738" text-anchor="middle" font-size="12" font-weight="bold" fill="#4E2A00">models/mod.rs (Rust)</text>
+  <text x="1737" y="756" text-anchor="middle" font-size="10" fill="#4E2A00">EnvVariable { key, value }</text>
+  <text x="1737" y="771" text-anchor="middle" font-size="10" fill="#4E2A00">EnvGroup { id, name, vars }</text>
+  <text x="1737" y="786" text-anchor="middle" font-size="10" fill="#4E2A00">HistoryRecord, Backup</text>
+  <text x="1737" y="801" text-anchor="middle" font-size="10" fill="#4E2A00">ActivationResult, EnvVarConflict</text>
+  <text x="1737" y="818" text-anchor="middle" font-size="10" fill="#4E2A00">AppSettings, ShellConfigInfo</text>
+  <text x="1737" y="836" text-anchor="middle" font-size="10" font-style="italic" fill="#E65100">← 被: commands/services/repos/platforms 引用</text>
+
+  <rect x="1885" y="718" width="265" height="125" rx="8" ry="8" fill="#F5BFB0" stroke="#C62828" stroke-width="1.8"/>
+  <text x="2017" y="738" text-anchor="middle" font-size="12" font-weight="bold" fill="#4A0E0E">error.rs (Rust)</text>
+  <text x="2017" y="756" text-anchor="middle" font-size="10" fill="#4A0E0E">AppError 枚举</text>
+  <text x="2017" y="771" text-anchor="middle" font-size="10" fill="#4A0E0E">Platform / Database</text>
+  <text x="2017" y="786" text-anchor="middle" font-size="10" fill="#4A0E0E">Serialization / Io</text>
+  <text x="2017" y="801" text-anchor="middle" font-size="10" fill="#4A0E0E">NotFound / PermissionDenied</text>
+  <text x="2017" y="818" text-anchor="middle" font-size="10" fill="#4A0E0E">Conflict + AppResult&lt;T&gt;</text>
+  <text x="2017" y="836" text-anchor="middle" font-size="10" font-style="italic" fill="#C62828">← 被: 所有 Rust 模块引用</text>
+
+  <rect x="1600" y="855" width="550" height="60" rx="8" ry="8" fill="#E8D4F0" stroke="#7B1FA2" stroke-width="1.5"/>
+  <text x="1875" y="878" text-anchor="middle" font-size="11" font-weight="bold" fill="#2E0854">types/index.ts (TypeScript) · EnvVar, EnvGroup, HistoryRecord, Backup, AppSettings, ActivationResult, EnvVarConflict, ShellConfigInfo</text>
+  <text x="1875" y="898" text-anchor="middle" font-size="10" font-style="italic" fill="#6A1B9A">Tauri IPC 序列化对齐: serde_json ↔ JSON.parse</text>
+
+  <!-- ============ 依赖关系箭头 ============ -->
+  <!-- 前端内部 -->
+  <line x1="1870" y1="165" x2="1870" y2="185" stroke="#6A1B9A" stroke-width="2" marker-end="url(#arrow-purple)"/>
+  <line x1="1700" y1="240" x2="1700" y2="265" stroke="#7B1FA2" stroke-width="1.3" marker-end="url(#arrow-purple)"/>
+  <line x1="1870" y1="240" x2="1870" y2="265" stroke="#7B1FA2" stroke-width="1.3" marker-end="url(#arrow-purple)"/>
+  <line x1="2040" y1="240" x2="2040" y2="265" stroke="#7B1FA2" stroke-width="1.3" marker-end="url(#arrow-purple)"/>
+  <line x1="1700" y1="350" x2="1700" y2="370" stroke="#7B1FA2" stroke-width="1.3" marker-end="url(#arrow-purple)"/>
+  <line x1="1870" y1="350" x2="1870" y2="370" stroke="#7B1FA2" stroke-width="1.3" marker-end="url(#arrow-purple)"/>
+  <line x1="2040" y1="350" x2="2040" y2="370" stroke="#7B1FA2" stroke-width="1.3" marker-end="url(#arrow-purple)"/>
+
+  <!-- Pages -> ipc.ts -->
+  <path d="M 1870,350 Q 1870,440 1992,465" fill="none" stroke="#6A1B9A" stroke-width="2" marker-end="url(#arrow-purple)"/>
+  <text x="1830" y="435" font-size="10" font-weight="bold" fill="#6A1B9A">invoke()</text>
+
+  <!-- ipc.ts -> IPC Bridge -->
+  <line x1="1865" y1="507" x2="1575" y2="507" stroke="#424242" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-gray)"/>
+  <text x="1650" y="500" font-size="10" font-weight="bold" fill="#424242">Tauri IPC</text>
+
+  <!-- IPC Bridge -> 6 commands (聚合线) -->
+  <line x1="1435" y1="550" x2="1435" y2="400" stroke="#424242" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <line x1="1435" y1="400" x2="170" y2="400" stroke="#424242" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <line x1="170" y1="400" x2="170" y2="357" stroke="#424242" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-gray)"/>
+  <line x1="170" y1="400" x2="360" y2="357" stroke="#424242" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-gray)"/>
+  <line x1="170" y1="400" x2="550" y2="357" stroke="#424242" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-gray)"/>
+  <line x1="170" y1="400" x2="740" y2="357" stroke="#424242" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-gray)"/>
+  <line x1="170" y1="400" x2="930" y2="357" stroke="#424242" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-gray)"/>
+  <line x1="170" y1="400" x2="1115" y2="357" stroke="#424242" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-gray)"/>
+  <text x="500" y="408" font-size="10" font-weight="bold" fill="#424242">invoke_handler 注册 · 分发到 commands</text>
+
+  <!-- lib.rs -> state -->
+  <line x1="300" y1="148" x2="320" y2="148" stroke="#1B5E20" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="295" y="143" font-size="9" font-weight="bold" fill="#1B5E20">manage()</text>
+
+  <!-- commands -> state (读取) -->
+  <line x1="270" y1="315" x2="330" y2="198" stroke="#1B5E20" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#arrow-green)"/>
+  <line x1="460" y1="315" x2="480" y2="198" stroke="#1B5E20" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#arrow-green)"/>
+  <line x1="650" y1="315" x2="630" y2="198" stroke="#1B5E20" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#arrow-green)"/>
+
+  <!-- commands -> services (group/history 调用 env_service) -->
+  <line x1="360" y1="357" x2="340" y2="412" stroke="#1B5E20" stroke-width="2.2" marker-end="url(#arrow-green)"/>
+  <text x="345" y="380" font-size="10" font-weight="bold" fill="#1B5E20">调用</text>
+  <line x1="550" y1="357" x2="340" y2="412" stroke="#1B5E20" stroke-width="2.2" marker-end="url(#arrow-green)"/>
+  <text x="460" y="388" font-size="10" font-weight="bold" fill="#1B5E20">调用</text>
+
+  <!-- commands -> repositories (直接 CRUD) -->
+  <line x1="360" y1="357" x2="200" y2="545" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="270" y="460" font-size="9" fill="#2E7D32" font-weight="bold">CRUD</text>
+  <line x1="550" y1="357" x2="450" y2="545" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <line x1="740" y1="357" x2="700" y2="545" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+  <!-- services -> repositories -->
+  <line x1="260" y1="497" x2="200" y2="545" stroke="#1B5E20" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="210" y="520" font-size="9" font-weight="bold" fill="#1B5E20">读写</text>
+  <line x1="420" y1="497" x2="450" y2="545" stroke="#1B5E20" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="425" y="520" font-size="9" font-weight="bold" fill="#1B5E20">读写</text>
+
+  <!-- services -> platforms (PlatformService trait) -->
+  <line x1="500" y1="497" x2="450" y2="690" stroke="#1B5E20" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+  <text x="470" y="595" font-size="11" font-weight="bold" fill="#1B5E20">PlatformService trait</text>
+
+  <!-- repositories -> db -->
+  <line x1="200" y1="635" x2="1040" y2="595" stroke="#00695C" stroke-width="1.5" marker-end="url(#arrow-teal)"/>
+  <text x="500" y="612" font-size="10" font-weight="bold" fill="#00695C">rusqlite::Connection · schema.sql</text>
+  <line x1="450" y1="635" x2="1040" y2="605" stroke="#00695C" stroke-width="1.5" marker-end="url(#arrow-teal)"/>
+  <line x1="700" y1="635" x2="1040" y2="615" stroke="#00695C" stroke-width="1.5" marker-end="url(#arrow-teal)"/>
+
+  <!-- state -> db + platforms -->
+  <line x1="540" y1="198" x2="1160" y2="545" stroke="#2E7D32" stroke-width="1.5" stroke-dasharray="2,2" marker-end="url(#arrow-green)"/>
+  <text x="820" y="360" font-size="9" fill="#2E7D32" font-weight="bold">Mutex&lt;Connection&gt;</text>
+  <line x1="470" y1="198" x2="200" y2="690" stroke="#2E7D32" stroke-width="1.5" stroke-dasharray="2,2" marker-end="url(#arrow-green)"/>
+  <text x="340" y="440" font-size="9" fill="#2E7D32" font-weight="bold">Mutex&lt;PlatformService&gt;</text>
+
+  <!-- platforms/mod -> 具体实现 -->
+  <line x1="320" y1="740" x2="330" y2="740" stroke="#1B5E20" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <line x1="320" y1="755" x2="580" y2="745" stroke="#1B5E20" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <line x1="320" y1="770" x2="830" y2="745" stroke="#1B5E20" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <line x1="320" y1="785" x2="1080" y2="745" stroke="#1B5E20" stroke-width="2" marker-end="url(#arrow-green)"/>
+
+  <!-- 具体实现 -> OS -->
+  <line x1="450" y1="800" x2="450" y2="830" stroke="#F9A825" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arrow-yellow)"/>
+  <line x1="700" y1="800" x2="700" y2="830" stroke="#F9A825" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arrow-yellow)"/>
+  <line x1="950" y1="800" x2="950" y2="830" stroke="#F9A825" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arrow-yellow)"/>
+  <line x1="1190" y1="800" x2="1190" y2="830" stroke="#F9A825" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arrow-yellow)"/>
+
+  <!-- 错误: 所有模块 -> error.rs (红色虚线) -->
+  <path d="M 170,315 Q 500,230 840,153" fill="none" stroke="#C62828" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow-red)"/>
+  <path d="M 340,455 Q 600,200 840,153" fill="none" stroke="#C62828" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow-red)"/>
+  <path d="M 200,585 Q 500,250 840,153" fill="none" stroke="#C62828" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow-red)"/>
+  <path d="M 200,740 Q 500,300 840,153" fill="none" stroke="#C62828" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow-red)"/>
+  <text x="500" y="220" font-size="10" font-weight="bold" fill="#C62828">所有模块引用 error.rs · AppResult&lt;T&gt;</text>
+
+  <!-- 模型: 所有业务模块 -> models (橙色虚线) -->
+  <path d="M 360,315 Q 500,650 640,153" fill="none" stroke="#E65100" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow-orange)"/>
+  <path d="M 340,455 Q 500,500 640,153" fill="none" stroke="#E65100" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow-orange)"/>
+  <path d="M 200,585 Q 500,500 640,153" fill="none" stroke="#E65100" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow-orange)"/>
+  <path d="M 450,585 Q 600,500 640,153" fill="none" stroke="#E65100" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow-orange)"/>
+  <path d="M 700,585 Q 750,400 640,153" fill="none" stroke="#E65100" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow-orange)"/>
+  <path d="M 450,740 Q 700,500 640,153" fill="none" stroke="#E65100" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#arrow-orange)"/>
+  <text x="550" y="240" font-size="10" font-weight="bold" fill="#E65100">所有业务模块引用 models</text>
+
+  <!-- 前端 TypeScript 类型 <-> Rust models (跨语言对齐) -->
+  <line x1="1737" y1="550" x2="1737" y2="718" stroke="#E65100" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-orange)"/>
+  <text x="1520" y="620" font-size="10" font-weight="bold" fill="#E65100">TypeScript ↔ Rust</text>
+  <text x="1520" y="635" font-size="10" fill="#E65100">类型对齐</text>
+
+  <!-- services -> platforms 标签 -->
+  <text x="475" y="625" font-size="9" fill="#1B5E20">env_service → platforms</text>
+
+  <!-- ============ 依赖关系说明 (底部) ============ -->
+  <rect x="80" y="930" width="2080" height="100" rx="8" ry="8" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.2" stroke-dasharray="3,2"/>
+  <text x="1120" y="952" text-anchor="middle" font-size="13" font-weight="bold" fill="#424242">核心依赖流向说明 (Dependency Flow Summary)</text>
+  <text x="1120" y="975" text-anchor="middle" font-size="11" fill="#424242">前端 Pages → invoke(ipc.ts) → Tauri IPC Bridge → Rust commands(6) → AppState(db/platform) → services/env_service → repositories(3) + platforms(4实现) → db(SQLite) + OS</text>
+  <text x="1120" y="995" text-anchor="middle" font-size="11" fill="#424242">group_commands / history_commands (粗线) 走完整的 services 链路; env/backup/settings/utils (细线) 直接走存储库或 PlatformService</text>
+  <text x="1120" y="1015" text-anchor="middle" font-size="11" fill="#424242">所有模块依赖统一的 error.rs (AppResult&lt;T&gt;); 所有业务模块依赖统一的 models/mod.rs (数据结构)</text>
+
+  <!-- ============ 6个 commands 的详细依赖表 (底部) ============ -->
+  <rect x="80" y="1050" width="2080" height="510" rx="8" ry="8" fill="#FFFFFF" stroke="#1B5E20" stroke-width="1.5"/>
+  <text x="1120" y="1075" text-anchor="middle" font-size="15" font-weight="bold" fill="#1B5E20">commands 模块详细依赖表 (Detailed Commands Dependencies)</text>
+
+  <g transform="translate(100,1095)">
+    <!-- 表头 -->
+    <line x1="0" y1="30" x2="2040" y2="30" stroke="#1B5E20" stroke-width="1.5"/>
+    <text x="80" y="22" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">命令模块</text>
+    <text x="430" y="22" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">state 依赖</text>
+    <text x="730" y="22" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">services 依赖</text>
+    <text x="1030" y="22" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">repositories 依赖</text>
+    <text x="1380" y="22" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">models 依赖</text>
+    <text x="1630" y="22" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">error 依赖</text>
+    <text x="1900" y="22" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B5E20">其他依赖</text>
+
+    <!-- env_commands -->
+    <line x1="0" y1="65" x2="2040" y2="65" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="80" y="58" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">env_commands.rs</text>
+    <text x="80" y="76" text-anchor="middle" font-size="9" fill="#388E3C">环境变量读写</text>
+    <text x="430" y="67" text-anchor="middle" font-size="10" fill="#0D3311">state(platform) · Mutex&lt;PlatformService&gt;</text>
+    <text x="730" y="67" text-anchor="middle" font-size="10" fill="#BDBDBD">— (直接调用 PlatformService)</text>
+    <text x="1030" y="67" text-anchor="middle" font-size="10" fill="#BDBDBD">— (无持久化)</text>
+    <text x="1380" y="67" text-anchor="middle" font-size="10" fill="#0D3311">EnvVar / EnvVariable</text>
+    <text x="1630" y="67" text-anchor="middle" font-size="10" fill="#0D3311">AppError / AppResult</text>
+    <text x="1900" y="67" text-anchor="middle" font-size="10" fill="#0D3311">tauri::State · serde</text>
+
+    <!-- group_commands -->
+    <line x1="0" y1="110" x2="2040" y2="110" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="80" y="103" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">group_commands.rs</text>
+    <text x="80" y="121" text-anchor="middle" font-size="9" fill="#2E7D32">分组 CRUD / 激活</text>
+    <text x="430" y="112" text-anchor="middle" font-size="10" fill="#0D3311">state(db+platform) · Connection + PlatformService</text>
+    <text x="730" y="112" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">→ env_service.rs (核心业务)</text>
+    <text x="1030" y="112" text-anchor="middle" font-size="10" fill="#0D3311">env_group_repo.rs + history_repo.rs</text>
+    <text x="1380" y="112" text-anchor="middle" font-size="10" fill="#0D3311">EnvGroup / CreateGroupInput / UpdateGroupInput</text>
+    <text x="1630" y="112" text-anchor="middle" font-size="10" fill="#0D3311">AppError / AppResult</text>
+    <text x="1900" y="112" text-anchor="middle" font-size="10" fill="#0D3311">tauri::State · rusqlite</text>
+
+    <!-- history_commands -->
+    <line x1="0" y1="155" x2="2040" y2="155" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="80" y="148" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">history_commands.rs</text>
+    <text x="80" y="166" text-anchor="middle" font-size="9" fill="#2E7D32">历史/回收站操作</text>
+    <text x="430" y="157" text-anchor="middle" font-size="10" fill="#0D3311">state(db+platform) · Connection + PlatformService</text>
+    <text x="730" y="157" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">→ env_service.rs (业务协作)</text>
+    <text x="1030" y="157" text-anchor="middle" font-size="10" fill="#0D3311">history_repo.rs + env_group_repo.rs</text>
+    <text x="1380" y="157" text-anchor="middle" font-size="10" fill="#0D3311">HistoryRecord / EnvGroup</text>
+    <text x="1630" y="157" text-anchor="middle" font-size="10" fill="#0D3311">AppError / AppResult</text>
+    <text x="1900" y="157" text-anchor="middle" font-size="10" fill="#0D3311">tauri::State · rusqlite</text>
+
+    <!-- backup_commands -->
+    <line x1="0" y1="200" x2="2040" y2="200" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="80" y="193" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">backup_commands.rs</text>
+    <text x="80" y="211" text-anchor="middle" font-size="9" fill="#388E3C">备份/导入/导出</text>
+    <text x="430" y="202" text-anchor="middle" font-size="10" fill="#0D3311">state(db+platform) · Connection + PlatformService</text>
+    <text x="730" y="202" text-anchor="middle" font-size="10" fill="#BDBDBD">— (直接 CRUD)</text>
+    <text x="1030" y="202" text-anchor="middle" font-size="10" fill="#0D3311">backup_repo.rs + env_group_repo.rs</text>
+    <text x="1380" y="202" text-anchor="middle" font-size="10" fill="#0D3311">Backup / EnvGroup</text>
+    <text x="1630" y="202" text-anchor="middle" font-size="10" fill="#0D3311">AppError / AppResult</text>
+    <text x="1900" y="202" text-anchor="middle" font-size="10" fill="#0D3311">tauri::State · rusqlite · std::fs</text>
+
+    <!-- settings_commands -->
+    <line x1="0" y1="245" x2="2040" y2="245" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="80" y="238" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">settings_commands.rs</text>
+    <text x="80" y="256" text-anchor="middle" font-size="9" fill="#388E3C">应用配置/主题设置</text>
+    <text x="430" y="247" text-anchor="middle" font-size="10" fill="#0D3311">state(db) · Connection</text>
+    <text x="730" y="247" text-anchor="middle" font-size="10" fill="#BDBDBD">— (无业务服务)</text>
+    <text x="1030" y="247" text-anchor="middle" font-size="10" fill="#BDBDBD">— (直接 SQLite)</text>
+    <text x="1380" y="247" text-anchor="middle" font-size="10" fill="#0D3311">AppSettings / ThemeSettings / NotificationSettings</text>
+    <text x="1630" y="247" text-anchor="middle" font-size="10" fill="#0D3311">AppError / AppResult</text>
+    <text x="1900" y="247" text-anchor="middle" font-size="10" fill="#0D3311">tauri::State · rusqlite params</text>
+
+    <!-- utils_commands -->
+    <line x1="0" y1="290" x2="2040" y2="290" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="80" y="283" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">utils_commands.rs</text>
+    <text x="80" y="301" text-anchor="middle" font-size="9" fill="#388E3C">工具函数</text>
+    <text x="430" y="292" text-anchor="middle" font-size="10" fill="#BDBDBD">— (无 state)</text>
+    <text x="730" y="292" text-anchor="middle" font-size="10" fill="#BDBDBD">— (无服务)</text>
+    <text x="1030" y="292" text-anchor="middle" font-size="10" fill="#BDBDBD">— (无存储)</text>
+    <text x="1380" y="292" text-anchor="middle" font-size="10" fill="#BDBDBD">— (无数据模型)</text>
+    <text x="1630" y="292" text-anchor="middle" font-size="10" fill="#BDBDBD">— (无显式错误)</text>
+    <text x="1900" y="292" text-anchor="middle" font-size="10" fill="#0D3311">tauri::AppHandle · clipboard-manager</text>
+
+    <!-- 汇总行 -->
+    <line x1="0" y1="335" x2="2040" y2="335" stroke="#1B5E20" stroke-width="1.5"/>
+    <text x="80" y="328" text-anchor="middle" font-size="11" font-weight="bold" fill="#1B5E20">总计 · 6 modules</text>
+    <text x="430" y="328" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">3 state(db+platform) / 1 state(db) / 1 state(platform) / 1 无</text>
+    <text x="730" y="328" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">2 调用 env_service.rs · 4 不调用</text>
+    <text x="1030" y="328" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">4 走 repositories · 2 无存储</text>
+    <text x="1380" y="328" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">5 依赖 models · 1 无</text>
+    <text x="1630" y="328" text-anchor="middle" font-size="10" font-weight="bold" fill="#C62828">5 统一使用 error.rs</text>
+    <text x="1900" y="328" text-anchor="middle" font-size="10" font-weight="bold" fill="#1B5E20">tauri / rusqlite / serde</text>
+  </g>
+
+  <!-- ============ 底部: platforms trait 详细表 ============ -->
+  <rect x="80" y="1370" width="2080" height="180" rx="8" ry="8" fill="#FFFFFF" stroke="#00695C" stroke-width="1.5"/>
+  <text x="1120" y="1395" text-anchor="middle" font-size="15" font-weight="bold" fill="#00695C">PlatformService Trait · 多平台实现对照表 (Cross-Platform Implementations)</text>
+
+  <g transform="translate(100,1415)">
+    <line x1="0" y1="25" x2="2040" y2="25" stroke="#00695C" stroke-width="1.2"/>
+    <text x="100" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#004D40">方法</text>
+    <text x="500" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#004D40">Windows 实现</text>
+    <text x="900" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#004D40">macOS 实现</text>
+    <text x="1300" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#004D40">Linux 实现</text>
+    <text x="1700" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#004D40">公共工具 (shell_profile.rs)</text>
+
+    <line x1="0" y1="55" x2="2040" y2="55" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="100" y="48" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">read_env_var(key)</text>
+    <text x="500" y="48" text-anchor="middle" font-size="10" fill="#0D3311">reg query HKCU\Environment</text>
+    <text x="900" y="48" text-anchor="middle" font-size="10" fill="#0D3311">launchctl getenv / ShellProfileManager</text>
+    <text x="1300" y="48" text-anchor="middle" font-size="10" fill="#0D3311">/etc/environment 读取 / ShellProfileManager</text>
+    <text x="1700" y="48" text-anchor="middle" font-size="10" fill="#00695C">解析 MARKER_START/END 区间</text>
+
+    <line x1="0" y1="85" x2="2040" y2="85" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="100" y="78" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">write_env_var(k,v,scope)</text>
+    <text x="500" y="78" text-anchor="middle" font-size="10" fill="#0D3311">reg add / setx + rundll32 刷新</text>
+    <text x="900" y="78" text-anchor="middle" font-size="10" fill="#0D3311">launchctl setenv + ShellProfileManager</text>
+    <text x="1300" y="78" text-anchor="middle" font-size="10" fill="#0D3311">pkexec 写入 /etc/environment</text>
+    <text x="1700" y="78" text-anchor="middle" font-size="10" fill="#00695C">追加/更新 export KEY=VALUE 行</text>
+
+    <line x1="0" y1="115" x2="2040" y2="115" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="100" y="108" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">delete_env_var(key,scope)</text>
+    <text x="500" y="108" text-anchor="middle" font-size="10" fill="#0D3311">reg delete HKCU\Environment\key</text>
+    <text x="900" y="108" text-anchor="middle" font-size="10" fill="#0D3311">launchctl unsetenv + ShellProfileManager</text>
+    <text x="1300" y="108" text-anchor="middle" font-size="10" fill="#0D3311">pkexec 删除行 / ShellProfileManager</text>
+    <text x="1700" y="108" text-anchor="middle" font-size="10" fill="#00695C">删除 export KEY 行并保留 MARKER</text>
+
+    <line x1="0" y1="145" x2="2040" y2="145" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="100" y="138" text-anchor="middle" font-size="11" font-weight="bold" fill="#0D3311">list_env_vars(scope)</text>
+    <text x="500" y="138" text-anchor="middle" font-size="10" fill="#0D3311">reg query + set 解析输出</text>
+    <text x="900" y="138" text-anchor="middle" font-size="10" fill="#0D3311">env / ShellProfileManager 解析</text>
+    <text x="1300" y="138" text-anchor="middle" font-size="10" fill="#0D3311">cat /etc/environment + ShellProfileManager</text>
+    <text x="1700" y="138" text-anchor="middle" font-size="10" fill="#00695C">解析所有 export 行 + 去重排序</text>
+
+    <line x1="0" y1="175" x2="2040" y2="175" stroke="#E0E0E0" stroke-width="0.8"/>
+    <text x="1000" y="168" text-anchor="middle" font-size="10" font-style="italic" fill="#00695C">PlatformError 枚举: CommandFailed / PermissionDenied / NotFound / InvalidFormat</text>
+  </g>
+</svg>

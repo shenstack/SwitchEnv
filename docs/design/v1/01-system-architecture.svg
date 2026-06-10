@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1600 1150"
+     width="1600"
+     height="1150"
+     font-family="'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+
+  <defs>
+    <!-- ============ 渐变定义 ============ -->
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#EEF2FF"/>
+    </linearGradient>
+
+    <linearGradient id="frontend-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+
+    <linearGradient id="frontend-header-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#A78BFA"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+
+    <linearGradient id="ipc-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6B7280"/>
+      <stop offset="100%" stop-color="#4B5563"/>
+    </linearGradient>
+
+    <linearGradient id="rust-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ECFDF5"/>
+      <stop offset="100%" stop-color="#D1FAE5"/>
+    </linearGradient>
+
+    <linearGradient id="rust-header-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <linearGradient id="sqlite-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#DBEAFE"/>
+      <stop offset="100%" stop-color="#BFDBFE"/>
+    </linearGradient>
+
+    <linearGradient id="sqlite-header-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+
+    <linearGradient id="os-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFEDD5"/>
+      <stop offset="100%" stop-color="#FED7AA"/>
+    </linearGradient>
+
+    <linearGradient id="os-header-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FB923C"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+
+    <linearGradient id="plugin-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FEF3C7"/>
+      <stop offset="100%" stop-color="#FDE68A"/>
+    </linearGradient>
+
+    <linearGradient id="plugin-header-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+
+    <linearGradient id="bundler-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#B45309"/>
+      <stop offset="100%" stop-color="#78350F"/>
+    </linearGradient>
+
+    <linearGradient id="ipc-node-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#6D28D9"/>
+    </linearGradient>
+
+    <linearGradient id="command-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+
+    <!-- ============ 阴影滤镜 ============ -->
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="0" dy="3" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="medium-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="0" dy="5" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.25"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- ============ 箭头标记 ============ -->
+    <marker id="arrowhead-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3AED"/>
+    </marker>
+
+    <marker id="arrowhead-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#059669"/>
+    </marker>
+
+    <marker id="arrowhead-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563EB"/>
+    </marker>
+
+    <marker id="arrowhead-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EA580C"/>
+    </marker>
+
+    <marker id="arrowhead-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B"/>
+    </marker>
+
+    <marker id="arrowhead-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/>
+    </marker>
+
+    <marker id="arrowhead-gray-start" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 10 0 L 0 5 L 10 10 z" fill="#4B5563"/>
+    </marker>
+
+    <marker id="arrowhead-brown" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#78350F"/>
+    </marker>
+
+  </defs>
+
+  <!-- ============ 背景 ============ -->
+  <rect width="1600" height="1150" fill="url(#bg-gradient)"/>
+
+  <!-- 装饰性网格点 -->
+  <g opacity="0.15">
+    <circle cx="100" cy="100" r="2" fill="#94A3B8"/>
+    <circle cx="300" cy="100" r="2" fill="#94A3B8"/>
+    <circle cx="500" cy="100" r="2" fill="#94A3B8"/>
+    <circle cx="700" cy="100" r="2" fill="#94A3B8"/>
+    <circle cx="900" cy="100" r="2" fill="#94A3B8"/>
+    <circle cx="1100" cy="100" r="2" fill="#94A3B8"/>
+    <circle cx="1300" cy="100" r="2" fill="#94A3B8"/>
+    <circle cx="1500" cy="100" r="2" fill="#94A3B8"/>
+    <circle cx="200" cy="1050" r="2" fill="#94A3B8"/>
+    <circle cx="400" cy="1050" r="2" fill="#94A3B8"/>
+    <circle cx="600" cy="1050" r="2" fill="#94A3B8"/>
+    <circle cx="800" cy="1050" r="2" fill="#94A3B8"/>
+    <circle cx="1000" cy="1050" r="2" fill="#94A3B8"/>
+    <circle cx="1200" cy="1050" r="2" fill="#94A3B8"/>
+    <circle cx="1400" cy="1050" r="2" fill="#94A3B8"/>
+  </g>
+
+  <!-- ============ 标题 ============ -->
+  <g>
+    <text x="800" y="42" text-anchor="middle" font-size="24" font-weight="700" fill="#1E293B">系统总体架构图</text>
+    <text x="800" y="68" text-anchor="middle" font-size="13" fill="#64748B">Env Assistant / Switch-Env · Tauri 2.x + React 19 + Rust + SQLite</text>
+    <line x1="600" y1="80" x2="1000" y2="80" stroke="#CBD5E1" stroke-width="1"/>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ============ 左侧：用户接入层 ============ -->
+  <!-- ========================================================================= -->
+  <g id="user-layer">
+
+    <!-- 用户人形图标 -->
+    <g transform="translate(60, 180)" filter="url(#soft-shadow)">
+      <!-- 头部 -->
+      <circle cx="40" cy="25" r="22" fill="#F5F3FF" stroke="#7C3AED" stroke-width="2"/>
+      <circle cx="33" cy="22" r="2.5" fill="#4C1D95"/>
+      <circle cx="47" cy="22" r="2.5" fill="#4C1D95"/>
+      <path d="M 32 32 Q 40 38 48 32" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- 身体 -->
+      <path d="M 40 47 L 40 90" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"/>
+      <!-- 手臂 -->
+      <path d="M 15 65 L 40 65 L 65 65" stroke="#7C3AED" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <!-- 腿 -->
+      <path d="M 40 90 L 22 120" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 40 90 L 58 120" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <text x="100" y="140" text-anchor="middle" font-size="14" font-weight="600" fill="#1E293B">用户</text>
+
+    <!-- WebView Window -->
+    <g transform="translate(40, 360)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="130" height="90" rx="12" ry="12" fill="white" stroke="#9CA3AF" stroke-width="2"/>
+      <!-- 窗口标题栏 -->
+      <rect x="0" y="0" width="130" height="18" rx="12" ry="12" fill="#F3F4F6"/>
+      <circle cx="12" cy="9" r="3.5" fill="#EF4444"/>
+      <circle cx="24" cy="9" r="3.5" fill="#F59E0B"/>
+      <circle cx="36" cy="9" r="3.5" fill="#10B981"/>
+      <text x="65" y="48" text-anchor="middle" font-size="11" font-weight="600" fill="#1F2937">Tauri WebView</text>
+      <text x="65" y="68" text-anchor="middle" font-size="10" fill="#6B7280">桌面应用窗口</text>
+    </g>
+
+    <!-- 用户 → WebView 箭头 -->
+    <path d="M 100 300 L 100 360" stroke="#4B5563" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrowhead-gray)"/>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ============ 中间列：前端层（React 19） ============ -->
+  <!-- ========================================================================= -->
+  <g id="frontend-layer">
+
+    <!-- 容器背景 -->
+    <g filter="url(#medium-shadow)">
+      <rect x="240" y="100" width="320" height="820" rx="18" ry="18" fill="url(#frontend-gradient)" stroke="#A78BFA" stroke-width="2"/>
+      <!-- 顶部标题栏 -->
+      <rect x="240" y="100" width="320" height="54" rx="18" ry="18" fill="url(#frontend-header-gradient)"/>
+      <rect x="240" y="130" width="320" height="24" fill="url(#frontend-header-gradient)"/>
+      <text x="400" y="132" text-anchor="middle" font-size="15" font-weight="700" fill="white">React UI Layer</text>
+      <text x="400" y="150" text-anchor="middle" font-size="11" fill="#EDE9FE">React 19 + TypeScript + Tailwind CSS</text>
+    </g>
+
+    <!-- App.tsx -->
+    <g filter="url(#soft-shadow)">
+      <rect x="260" y="175" width="280" height="48" rx="10" ry="10" fill="white" stroke="#C4B5FD" stroke-width="1.5"/>
+      <text x="400" y="200" text-anchor="middle" font-size="12" font-weight="600" fill="#4C1D95">App.tsx</text>
+      <text x="400" y="217" text-anchor="middle" font-size="10" fill="#7C3AED">根组件 + Tab 路由</text>
+    </g>
+
+    <!-- Pages -->
+    <g filter="url(#soft-shadow)">
+      <rect x="260" y="238" width="280" height="68" rx="10" ry="10" fill="white" stroke="#C4B5FD" stroke-width="1.5"/>
+      <text x="280" y="260" font-size="12" font-weight="600" fill="#4C1D95">Pages</text>
+      <text x="280" y="278" font-size="10" fill="#6B7280">EnvVarManager / SystemVars</text>
+      <text x="280" y="294" font-size="10" fill="#6B7280">HistoryPage / SettingsPage</text>
+    </g>
+
+    <!-- Components -->
+    <g filter="url(#soft-shadow)">
+      <rect x="260" y="320" width="280" height="68" rx="10" ry="10" fill="white" stroke="#C4B5FD" stroke-width="1.5"/>
+      <text x="280" y="342" font-size="12" font-weight="600" fill="#4C1D95">Components</text>
+      <text x="280" y="360" font-size="10" fill="#6B7280">ConfirmDialog / Modal</text>
+      <text x="280" y="376" font-size="10" fill="#6B7280">SearchBar / ToastProvider</text>
+    </g>
+
+    <!-- State -->
+    <g filter="url(#soft-shadow)">
+      <rect x="260" y="402" width="280" height="56" rx="10" ry="10" fill="white" stroke="#C4B5FD" stroke-width="1.5"/>
+      <text x="280" y="424" font-size="12" font-weight="600" fill="#4C1D95">State</text>
+      <text x="280" y="442" font-size="10" fill="#6B7280">useAppStore (Zustand) / useTheme Hook</text>
+    </g>
+
+    <!-- Types / ipc.ts - 高亮节点 -->
+    <g filter="url(#soft-shadow)">
+      <rect x="260" y="472" width="280" height="60" rx="10" ry="10" fill="url(#ipc-node-gradient)" stroke="#5B21B6" stroke-width="2"/>
+      <text x="280" y="497" font-size="12" font-weight="600" fill="white">Types / ipc.ts</text>
+      <text x="280" y="517" font-size="10" fill="#EDE9FE">@tauri-apps/api/core · invoke</text>
+    </g>
+
+    <!-- WebView → Frontend 连接线 -->
+    <path d="M 170 405 L 240 405" stroke="#4B5563" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+    <!-- Pages → ipc.ts 虚线箭头（invoke 调用） -->
+    <path d="M 400 306 L 400 472" stroke="#7C3AED" stroke-width="1.8" fill="none" stroke-dasharray="6,4" stroke-linecap="round" marker-end="url(#arrowhead-purple)"/>
+    <text x="445" y="395" font-size="10" fill="#7C3AED" font-weight="500">invoke</text>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ============ 中间列：IPC 桥接 ============ -->
+  <!-- ========================================================================= -->
+  <g id="ipc-bridge-layer" transform="translate(580, 430)">
+    <g filter="url(#medium-shadow)">
+      <rect x="0" y="0" width="200" height="80" rx="14" ry="14" fill="url(#ipc-gradient)" stroke="#374151" stroke-width="2"/>
+      <text x="100" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="white">Tauri IPC Bridge</text>
+      <text x="100" y="55" text-anchor="middle" font-size="10.5" fill="#E5E7EB">WebView ←→ Rust Core</text>
+      <!-- 装饰性点 -->
+      <circle cx="20" cy="40" r="3" fill="#9CA3AF" opacity="0.6"/>
+      <circle cx="35" cy="40" r="3" fill="#9CA3AF" opacity="0.4"/>
+      <circle cx="50" cy="40" r="3" fill="#9CA3AF" opacity="0.25"/>
+      <circle cx="150" cy="40" r="3" fill="#9CA3AF" opacity="0.25"/>
+      <circle cx="165" cy="40" r="3" fill="#9CA3AF" opacity="0.4"/>
+      <circle cx="180" cy="40" r="3" fill="#9CA3AF" opacity="0.6"/>
+    </g>
+  </g>
+
+  <!-- ipc.ts → IPC Bridge 双向虚线 -->
+  <path d="M 540 502 C 560 502, 565 470, 580 470" stroke="#4B5563" stroke-width="2" fill="none" stroke-dasharray="7,4" stroke-linecap="round" marker-end="url(#arrowhead-gray)" marker-start="url(#arrowhead-gray-start)"/>
+  <text x="510" y="485" font-size="10" fill="#4B5563" font-weight="500">IPC</text>
+
+  <!-- IPC Bridge → commands 双向虚线 -->
+  <path d="M 780 470 C 795 470, 800 502, 820 502" stroke="#4B5563" stroke-width="2" fill="none" stroke-dasharray="7,4" stroke-linecap="round" marker-end="url(#arrowhead-gray)" marker-start="url(#arrowhead-gray-start)"/>
+  <text x="785" y="485" font-size="10" fill="#4B5563" font-weight="500">请求</text>
+
+  <!-- ========================================================================= -->
+  <!-- ============ 中间列：后端层（Rust Core） ============ -->
+  <!-- ========================================================================= -->
+  <g id="rust-layer">
+
+    <!-- 容器背景 -->
+    <g filter="url(#medium-shadow)">
+      <rect x="820" y="100" width="340" height="820" rx="18" ry="18" fill="url(#rust-gradient)" stroke="#34D399" stroke-width="2"/>
+      <!-- 顶部标题栏 -->
+      <rect x="820" y="100" width="340" height="54" rx="18" ry="18" fill="url(#rust-header-gradient)"/>
+      <rect x="820" y="130" width="340" height="24" fill="url(#rust-header-gradient)"/>
+      <text x="990" y="132" text-anchor="middle" font-size="15" font-weight="700" fill="white">Rust Core</text>
+      <text x="990" y="150" text-anchor="middle" font-size="11" fill="#D1FAE5">Tauri 2.x Rust Backend</text>
+    </g>
+
+    <!-- commands 层 - 高亮 -->
+    <g filter="url(#soft-shadow)">
+      <rect x="840" y="175" width="300" height="88" rx="10" ry="10" fill="url(#command-gradient)" stroke="#047857" stroke-width="2"/>
+      <text x="860" y="200" font-size="12" font-weight="600" fill="white">commands 层</text>
+      <text x="860" y="220" font-size="10" fill="#D1FAE5">env_commands / group_commands</text>
+      <text x="860" y="236" font-size="10" fill="#D1FAE5">history_commands / backup_commands</text>
+      <text x="860" y="252" font-size="10" fill="#D1FAE5">settings_commands / utils_commands</text>
+    </g>
+
+    <!-- services 层 -->
+    <g filter="url(#soft-shadow)">
+      <rect x="840" y="280" width="300" height="68" rx="10" ry="10" fill="white" stroke="#6EE7B7" stroke-width="1.5"/>
+      <text x="860" y="302" font-size="12" font-weight="600" fill="#065F46">services 层</text>
+      <text x="860" y="322" font-size="10" fill="#6B7280">EnvService: activate_group</text>
+      <text x="860" y="338" font-size="10" fill="#6B7280">/ deactivate_group</text>
+    </g>
+
+    <!-- repositories 层 -->
+    <g filter="url(#soft-shadow)">
+      <rect x="840" y="362" width="300" height="68" rx="10" ry="10" fill="white" stroke="#6EE7B7" stroke-width="1.5"/>
+      <text x="860" y="384" font-size="12" font-weight="600" fill="#065F46">repositories 层</text>
+      <text x="860" y="404" font-size="10" fill="#6B7280">EnvGroupRepository</text>
+      <text x="860" y="420" font-size="10" fill="#6B7280">HistoryRepository / BackupRepository</text>
+    </g>
+
+    <!-- state 层 -->
+    <g filter="url(#soft-shadow)">
+      <rect x="840" y="444" width="300" height="56" rx="10" ry="10" fill="white" stroke="#6EE7B7" stroke-width="1.5"/>
+      <text x="860" y="466" font-size="12" font-weight="600" fill="#065F46">state 层</text>
+      <text x="860" y="486" font-size="10" fill="#6B7280">AppState { db: Mutex, platform: Mutex }</text>
+    </g>
+
+    <!-- models 层 -->
+    <g filter="url(#soft-shadow)">
+      <rect x="840" y="514" width="300" height="56" rx="10" ry="10" fill="white" stroke="#6EE7B7" stroke-width="1.5"/>
+      <text x="860" y="536" font-size="12" font-weight="600" fill="#065F46">models 层</text>
+      <text x="860" y="556" font-size="10" fill="#6B7280">EnvVar / EnvGroup / HistoryRecord / Backup / AppSettings</text>
+    </g>
+
+    <!-- error 层 -->
+    <g filter="url(#soft-shadow)">
+      <rect x="840" y="584" width="300" height="48" rx="10" ry="10" fill="white" stroke="#6EE7B7" stroke-width="1.5"/>
+      <text x="860" y="605" font-size="12" font-weight="600" fill="#065F46">error 层</text>
+      <text x="860" y="624" font-size="10" fill="#6B7280">AppError / AppResult</text>
+    </g>
+
+    <!-- db 层 -->
+    <g filter="url(#soft-shadow)">
+      <rect x="840" y="646" width="300" height="56" rx="10" ry="10" fill="white" stroke="#6EE7B7" stroke-width="1.5"/>
+      <text x="860" y="668" font-size="12" font-weight="600" fill="#065F46">db 层</text>
+      <text x="860" y="688" font-size="10" fill="#6B7280">SQLite / rusqlite + migrations</text>
+    </g>
+
+    <!-- platforms 层 -->
+    <g filter="url(#soft-shadow)">
+      <rect x="840" y="716" width="300" height="60" rx="10" ry="10" fill="white" stroke="#6EE7B7" stroke-width="1.5"/>
+      <text x="860" y="738" font-size="12" font-weight="600" fill="#065F46">platforms 层</text>
+      <text x="860" y="758" font-size="10" fill="#6B7280">PlatformService trait + Win/macOS/Linux impl</text>
+      <text x="860" y="772" font-size="10" fill="#6B7280">+ ShellProfileManager</text>
+    </g>
+
+    <!-- Rust 内部连接线 -->
+    <path d="M 990 263 L 990 280" stroke="#059669" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arrowhead-green)"/>
+    <path d="M 990 348 L 990 362" stroke="#059669" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arrowhead-green)"/>
+    <path d="M 990 430 L 990 444" stroke="#059669" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arrowhead-green)"/>
+    <text x="1000" y="400" font-size="10" fill="#059669">SQL 读写</text>
+    <path d="M 990 702 L 990 716" stroke="#059669" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arrowhead-green)"/>
+
+    <!-- services → platforms 右侧绕行线（调用系统 API） -->
+    <path d="M 1140 320 C 1200 320, 1200 745, 1140 745" stroke="#059669" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arrowhead-green)"/>
+    <text x="1175" y="540" font-size="10" fill="#059669" writing-mode="tb" transform="rotate(90 1195 540)">调用系统 API</text>
+
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ============ 右侧：外部系统层 - SQLite 数据库 ============ -->
+  <!-- ========================================================================= -->
+  <g id="sqlite-layer">
+
+    <!-- 圆柱容器 -->
+    <g filter="url(#medium-shadow)">
+      <!-- 主体 -->
+      <rect x="1220" y="115" width="260" height="280" rx="10" ry="10" fill="url(#sqlite-gradient)" stroke="#60A5FA" stroke-width="2"/>
+      <!-- 顶部标题栏 -->
+      <rect x="1220" y="115" width="260" height="48" rx="10" ry="10" fill="url(#sqlite-header-gradient)"/>
+      <rect x="1220" y="140" width="260" height="23" fill="url(#sqlite-header-gradient)"/>
+      <text x="1350" y="142" text-anchor="middle" font-size="13" font-weight="700" fill="white">SQLite Database</text>
+      <text x="1350" y="158" text-anchor="middle" font-size="10" fill="#DBEAFE">app data dir / env-assistant.db</text>
+      <!-- 底部椭圆装饰 -->
+      <ellipse cx="1350" cy="395" rx="130" ry="10" fill="#60A5FA" opacity="0.3"/>
+    </g>
+
+    <!-- 数据表 -->
+    <g filter="url(#soft-shadow)">
+      <rect x="1240" y="180" width="220" height="34" rx="6" ry="6" fill="white" stroke="#93C5FD" stroke-width="1.2"/>
+      <text x="1255" y="202" font-size="11" font-weight="600" fill="#1E40AF">▸ env_groups</text>
+
+      <rect x="1240" y="222" width="220" height="34" rx="6" ry="6" fill="white" stroke="#93C5FD" stroke-width="1.2"/>
+      <text x="1255" y="244" font-size="11" font-weight="600" fill="#1E40AF">▸ trash_history</text>
+
+      <rect x="1240" y="264" width="220" height="34" rx="6" ry="6" fill="white" stroke="#93C5FD" stroke-width="1.2"/>
+      <text x="1255" y="286" font-size="11" font-weight="600" fill="#1E40AF">▸ backups</text>
+
+      <rect x="1240" y="306" width="220" height="34" rx="6" ry="6" fill="white" stroke="#93C5FD" stroke-width="1.2"/>
+      <text x="1255" y="328" font-size="11" font-weight="600" fill="#1E40AF">▸ app_settings</text>
+
+      <rect x="1240" y="348" width="220" height="34" rx="6" ry="6" fill="white" stroke="#93C5FD" stroke-width="1.2" opacity="0.7"/>
+      <text x="1255" y="370" font-size="11" fill="#64748B">⋯ 更多表</text>
+    </g>
+
+    <!-- db 层 → SQLite 箭头 -->
+    <path d="M 1140 674 C 1180 674, 1190 280, 1220 280" stroke="#2563EB" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrowhead-blue)"/>
+    <text x="1175" y="450" font-size="10" fill="#2563EB" font-weight="500">DB 读写</text>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ============ 右侧：外部系统层 - 操作系统 API ============ -->
+  <!-- ========================================================================= -->
+  <g id="os-layer">
+
+    <!-- 容器 -->
+    <g filter="url(#medium-shadow)">
+      <rect x="1220" y="440" width="260" height="430" rx="18" ry="18" fill="url(#os-gradient)" stroke="#FB923C" stroke-width="2"/>
+      <rect x="1220" y="440" width="260" height="54" rx="18" ry="18" fill="url(#os-header-gradient)"/>
+      <rect x="1220" y="470" width="260" height="24" fill="url(#os-header-gradient)"/>
+      <text x="1350" y="472" text-anchor="middle" font-size="13" font-weight="700" fill="white">操作系统 API</text>
+      <text x="1350" y="490" text-anchor="middle" font-size="10.5" fill="#FFEDD5">跨平台环境变量操作</text>
+    </g>
+
+    <!-- Windows -->
+    <g filter="url(#soft-shadow)">
+      <rect x="1240" y="515" width="220" height="96" rx="12" ry="12" fill="white" stroke="#FDBA74" stroke-width="1.5"/>
+      <text x="1260" y="540" font-size="12" font-weight="700" fill="#9A3412">🪟 Windows</text>
+      <text x="1260" y="562" font-size="10" fill="#6B7280">注册表 (reg / setx)</text>
+      <text x="1260" y="580" font-size="10" fill="#6B7280">+ rundll32 刷新环境</text>
+      <text x="1260" y="598" font-size="10" fill="#6B7280">HKCU\Environment</text>
+    </g>
+
+    <!-- macOS -->
+    <g filter="url(#soft-shadow)">
+      <rect x="1240" y="625" width="220" height="96" rx="12" ry="12" fill="white" stroke="#FDBA74" stroke-width="1.5"/>
+      <text x="1260" y="650" font-size="12" font-weight="700" fill="#9A3412"> macOS</text>
+      <text x="1260" y="672" font-size="10" fill="#6B7280">launchctl setenv/unsetenv</text>
+      <text x="1260" y="690" font-size="10" fill="#6B7280">+ ~/.zshrc / .bashrc</text>
+      <text x="1260" y="708" font-size="10" fill="#6B7280">ShellProfile 管理</text>
+    </g>
+
+    <!-- Linux -->
+    <g filter="url(#soft-shadow)">
+      <rect x="1240" y="735" width="220" height="110" rx="12" ry="12" fill="white" stroke="#FDBA74" stroke-width="1.5"/>
+      <text x="1260" y="760" font-size="12" font-weight="700" fill="#9A3412">🐧 Linux</text>
+      <text x="1260" y="782" font-size="10" fill="#6B7280">/etc/environment</text>
+      <text x="1260" y="800" font-size="10" fill="#6B7280">+ pkexec 提权</text>
+      <text x="1260" y="818" font-size="10" fill="#6B7280">+ ~/.zshrc / .bashrc</text>
+      <text x="1260" y="836" font-size="10" fill="#6B7280">ShellProfile 管理</text>
+    </g>
+
+    <!-- platforms → OS 箭头 -->
+    <path d="M 1140 745 C 1180 745, 1190 655, 1220 655" stroke="#EA580C" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrowhead-orange)"/>
+    <text x="1160" y="715" font-size="10" fill="#EA580C" font-weight="500">系统调用</text>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ============ 右侧：外部系统层 - Tauri 插件 ============ -->
+  <!-- ========================================================================= -->
+  <g id="plugins-layer">
+
+    <g filter="url(#medium-shadow)">
+      <rect x="1220" y="890" width="260" height="70" rx="14" ry="14" fill="url(#plugin-gradient)" stroke="#FBBF24" stroke-width="2"/>
+      <rect x="1220" y="890" width="260" height="30" rx="14" ry="14" fill="url(#plugin-header-gradient)"/>
+      <rect x="1220" y="908" width="260" height="12" fill="url(#plugin-header-gradient)"/>
+      <text x="1350" y="910" text-anchor="middle" font-size="12" font-weight="700" fill="white">Tauri 插件</text>
+      <text x="1350" y="938" text-anchor="middle" font-size="11" fill="#78350F">📋 剪贴板 · 🔔 通知 · 📁 文件系统</text>
+      <text x="1350" y="955" text-anchor="middle" font-size="10" fill="#92400E">@tauri-apps/plugin-* series</text>
+    </g>
+
+    <!-- commands → plugins 绕行线 -->
+    <path d="M 990 263 C 1320 263, 1350 890, 1350 890" stroke="#F59E0B" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="8,4" marker-end="url(#arrowhead-amber)"/>
+    <text x="1435" y="580" font-size="10" fill="#F59E0B" font-weight="500" writing-mode="tb" transform="rotate(90 1450 580)">调用插件 API</text>
+
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ============ 底部：构建 &amp; 打包 ============ -->
+  <!-- ========================================================================= -->
+  <g id="bundler-layer">
+
+    <g filter="url(#medium-shadow)" transform="translate(500, 980)">
+      <rect x="0" y="0" width="500" height="70" rx="14" ry="14" fill="url(#bundler-gradient)" stroke="#78350F" stroke-width="2"/>
+      <text x="250" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="white">⚙ Tauri Bundler</text>
+      <text x="250" y="52" text-anchor="middle" font-size="11" fill="#FED7AA">.exe · .msi · .app · .dmg · .AppImage · .deb</text>
+    </g>
+
+    <!-- Frontend → Bundler 虚线 -->
+    <path d="M 400 820 C 400 900, 500 900, 500 980" stroke="#78350F" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="7,4" marker-end="url(#arrowhead-brown)"/>
+    <text x="340" y="930" font-size="10" fill="#78350F" font-weight="500">前端打包</text>
+
+    <!-- Rust → Bundler 虚线 -->
+    <path d="M 990 820 C 990 900, 1000 900, 1000 980" stroke="#78350F" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="7,4" marker-end="url(#arrowhead-brown)"/>
+    <text x="1020" y="930" font-size="10" fill="#78350F" font-weight="500">Rust 编译</text>
+
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- ============ 底部图例 ============ -->
+  <!-- ========================================================================= -->
+  <g transform="translate(100, 1095)" opacity="0.95">
+    <rect x="0" y="0" width="1400" height="40" rx="10" ry="10" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+
+    <g transform="translate(30, 20)">
+      <rect x="0" y="-10" width="14" height="14" rx="3" fill="#EDE9FE" stroke="#A78BFA" stroke-width="1.5"/>
+      <text x="22" y="1" font-size="11" fill="#334155">前端层</text>
+
+      <rect x="100" y="-10" width="14" height="14" rx="3" fill="#D1FAE5" stroke="#34D399" stroke-width="1.5"/>
+      <text x="122" y="1" font-size="11" fill="#334155">Rust 后端层</text>
+
+      <rect x="230" y="-10" width="14" height="14" rx="3" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1.5"/>
+      <text x="252" y="1" font-size="11" fill="#334155">SQLite 数据层</text>
+
+      <rect x="370" y="-10" width="14" height="14" rx="3" fill="#FFEDD5" stroke="#FB923C" stroke-width="1.5"/>
+      <text x="392" y="1" font-size="11" fill="#334155">操作系统 API</text>
+
+      <rect x="500" y="-10" width="14" height="14" rx="3" fill="#FEF3C7" stroke="#FBBF24" stroke-width="1.5"/>
+      <text x="522" y="1" font-size="11" fill="#334155">Tauri 插件</text>
+
+      <rect x="620" y="-10" width="14" height="14" rx="3" fill="#92400E" stroke="#78350F" stroke-width="1.5"/>
+      <text x="642" y="1" font-size="11" fill="#334155">构建打包</text>
+
+      <line x1="740" y1="0" x2="770" y2="0" stroke="#4B5563" stroke-width="2" stroke-dasharray="6,4"/>
+      <text x="780" y="1" font-size="11" fill="#334155">IPC 通信</text>
+
+      <line x1="880" y1="0" x2="910" y2="0" stroke="#059669" stroke-width="2"/>
+      <polygon points="910,-5 920,0 910,5" fill="#059669"/>
+      <text x="930" y="1" font-size="11" fill="#334155">数据/调用流</text>
+
+      <text x="1350" y="2" text-anchor="end" font-size="10" fill="#94A3B8">Switch-Env · v1.0 Architecture Diagram</text>
+    </g>
+  </g>
+
+</svg>

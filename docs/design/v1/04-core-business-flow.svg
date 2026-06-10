@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2400 1620" font-family="Segoe UI, Arial, Helvetica, sans-serif" font-size="13">
+  <defs>
+    <!-- Markers -->
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1565C0"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2E7D32"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#E65100"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A1B9A"/>
+    </marker>
+    <!-- Drop shadow -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="1" dy="2" stdDeviation="1.5" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- ======= 背景整体 ======= -->
+  <rect x="0" y="0" width="2400" height="1620" fill="#FAFAFA"/>
+
+  <!-- ============================================================= -->
+  <!-- 泳道 1: activate_group (蓝色)                                   -->
+  <!-- ============================================================= -->
+  <g id="lane-1">
+    <text x="310" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#1565C0">激活变量组 (activate_group)</text>
+    <rect x="40" y="40" width="540" height="1480" fill="#E3F2FD" stroke="#1565C0" stroke-width="2" rx="6"/>
+  </g>
+
+  <!-- Lane 1 流程图节点 (纵向) -->
+  <g id="lane1-flow">
+    <!-- 开始 (椭圆) -->
+    <ellipse cx="290" cy="80" rx="40" ry="22" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.5"/>
+    <text x="290" y="84" text-anchor="middle" font-weight="bold" fill="#0D47A1">开始</text>
+
+    <!-- 箭头 -->
+    <line x1="290" y1="102" x2="290" y2="118" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- [前端] 用户在 EnvVarManager 点击电源图标 (平行四边形) -->
+    <g filter="url(#shadow)">
+      <polygon points="140,125 460,125 450,170 130,170" fill="#FFF3E0" stroke="#E65100" stroke-width="1.5"/>
+      <text x="295" y="145" text-anchor="middle" fill="#3E2723">用户在 EnvVarManager 页面点击</text>
+      <text x="295" y="163" text-anchor="middle" fill="#3E2723">某个组的电源图标</text>
+    </g>
+
+    <line x1="290" y1="170" x2="290" y2="188" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 前端 invoke 调用 (圆角矩形) -->
+    <g filter="url(#shadow)">
+      <rect x="130" y="188" width="320" height="72" rx="10" fill="#FFFFFF" stroke="#1565C0" stroke-width="1.5"/>
+      <text x="145" y="212" font-weight="600" fill="#1565C0">[前端] ipc.activateGroup(groupId)</text>
+      <text x="145" y="232" fill="#37474F">→ invoke(&quot;activate_group&quot;, { id })</text>
+      <text x="145" y="250" font-size="11" fill="#78909C">前端 → Rust 命令层调用</text>
+    </g>
+
+    <line x1="290" y1="260" x2="290" y2="276" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- Rust command -->
+    <g filter="url(#shadow)">
+      <rect x="130" y="276" width="320" height="62" rx="10" fill="#FFFFFF" stroke="#1565C0" stroke-width="1.5"/>
+      <text x="145" y="298" font-weight="600" fill="#1565C0">[Rust command]</text>
+      <text x="145" y="318" fill="#37474F">group_commands::activate_group(state, id)</text>
+      <text x="145" y="334" font-size="11" fill="#78909C">Tauri 命令入口</text>
+    </g>
+
+    <line x1="290" y1="338" x2="290" y2="354" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- Service (深蓝色卡片) -->
+    <g filter="url(#shadow)">
+      <rect x="130" y="354" width="320" height="72" rx="10" fill="#1976D2" stroke="#0D47A1" stroke-width="1.5"/>
+      <text x="145" y="378" font-weight="bold" fill="#FFFFFF">[Service] EnvService::activate_group()</text>
+      <text x="145" y="398" fill="#E3F2FD">参数: (platform, conn, group_id)</text>
+      <text x="145" y="418" font-size="11" fill="#BBDEFB">核心业务逻辑入口</text>
+    </g>
+
+    <line x1="290" y1="426" x2="290" y2="442" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 4a: 读取 EnvGroup -->
+    <g filter="url(#shadow)">
+      <rect x="150" y="442" width="280" height="64" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="160" y="464" font-weight="600" fill="#1B5E20">4a. 读取 EnvGroup</text>
+      <text x="160" y="482" fill="#37474F">env_group_repo.get_by_id(group_id)</text>
+      <text x="160" y="500" font-size="11" fill="#B71C1C">若不存在 → NotFound AppError</text>
+    </g>
+
+    <line x1="290" y1="506" x2="290" y2="522" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 4b: 查询现有变量 -->
+    <g filter="url(#shadow)">
+      <rect x="150" y="522" width="280" height="60" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="160" y="544" font-weight="600" fill="#1B5E20">4b. 查询现有环境变量</text>
+      <text x="160" y="562" fill="#37474F">platform.get_all_variables(false)</text>
+      <text x="160" y="578" font-size="11" fill="#78909C">获取系统当前已注册变量列表</text>
+    </g>
+
+    <line x1="290" y1="582" x2="290" y2="598" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 4c: 冲突检测 -->
+    <g filter="url(#shadow)">
+      <rect x="150" y="598" width="280" height="62" rx="10" fill="#FFF3E0" stroke="#EF6C00" stroke-width="1.2"/>
+      <text x="160" y="620" font-weight="600" fill="#BF360C">4c. 冲突检测</text>
+      <text x="160" y="640" fill="#37474F">遍历 group.variables vs 现有 vars</text>
+      <text x="160" y="656" font-size="11" fill="#78909C">生成 Vec&lt;EnvVarConflict&gt; (名称冲突列表)</text>
+    </g>
+
+    <line x1="290" y1="660" x2="290" y2="676" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 4d: chain_id 处理 -->
+    <g filter="url(#shadow)">
+      <rect x="150" y="676" width="280" height="82" rx="10" fill="#FCE4EC" stroke="#C2185B" stroke-width="1.2"/>
+      <text x="160" y="698" font-weight="600" fill="#880E4F">4d. chain_id 处理 (互斥组)</text>
+      <text x="160" y="718" fill="#37474F">若 chain_id 存在: 查询同 chain 的其他激活组</text>
+      <text x="160" y="736" fill="#37474F">对每组执行: platform.remove_variable()</text>
+      <text x="160" y="752" font-size="11" fill="#78909C">+ 更新 is_active=0 + 写入 history</text>
+    </g>
+
+    <line x1="290" y1="758" x2="290" y2="774" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 4e: 写入环境变量 -->
+    <g filter="url(#shadow)">
+      <rect x="150" y="774" width="280" height="82" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="160" y="796" font-weight="600" fill="#1B5E20">4e. 写入环境变量</text>
+      <text x="160" y="816" fill="#37474F">遍历 group.variables 调用:</text>
+      <text x="160" y="834" fill="#37474F">platform.set_variable(name, value, false)</text>
+      <text x="160" y="850" font-size="11" fill="#78909C">Windows → Setx/Reg; macOS/Linux → ShellProfileManager</text>
+    </g>
+
+    <line x1="290" y1="856" x2="290" y2="872" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 4f: 刷新环境 -->
+    <g filter="url(#shadow)">
+      <rect x="150" y="872" width="280" height="60" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="160" y="894" font-weight="600" fill="#1B5E20">4f. 刷新环境</text>
+      <text x="160" y="912" fill="#37474F">platform.refresh_environment()</text>
+      <text x="160" y="928" font-size="11" fill="#78909C">Win → Rundll32 + PowerShell; 其他平台空操作</text>
+    </g>
+
+    <line x1="290" y1="932" x2="290" y2="948" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 4g: 更新 DB 状态 -->
+    <g filter="url(#shadow)">
+      <rect x="150" y="948" width="280" height="58" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="160" y="970" font-weight="600" fill="#1B5E20">4g. 更新 DB 状态</text>
+      <text x="160" y="988" fill="#37474F">env_groups.is_active = 1, updated_at = Utc::now()</text>
+      <text x="160" y="1002" font-size="11" fill="#78909C">DB: env_groups 表</text>
+    </g>
+
+    <line x1="290" y1="1006" x2="290" y2="1022" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 4h: 写入历史 -->
+    <g filter="url(#shadow)">
+      <rect x="150" y="1022" width="280" height="64" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="160" y="1044" font-weight="600" fill="#1B5E20">4h. 写入操作历史</text>
+      <text x="160" y="1062" fill="#37474F">trash_history: action_type=&apos;activate&apos;</text>
+      <text x="160" y="1080" font-size="11" fill="#78909C">before_data + after_data JSON 快照</text>
+    </g>
+
+    <line x1="290" y1="1086" x2="290" y2="1102" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 返回结果 (平行四边形) -->
+    <g filter="url(#shadow)">
+      <polygon points="130,1102 450,1102 440,1158 120,1158" fill="#FFF3E0" stroke="#E65100" stroke-width="1.5"/>
+      <text x="290" y="1125" text-anchor="middle" font-weight="600" fill="#BF360C">返回 ActivationResult</text>
+      <text x="290" y="1143" text-anchor="middle" font-size="11" fill="#37474F">{ success, conflicts, deactivated_groups, errors }</text>
+      <text x="290" y="1154" text-anchor="middle" font-size="10" fill="#78909C">Rust → 前端</text>
+    </g>
+
+    <line x1="290" y1="1158" x2="290" y2="1174" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 菱形决策: conflicts 非空? -->
+    <g filter="url(#shadow)">
+      <polygon points="290,1174 410,1210 290,1246 170,1210" fill="#FFF9C4" stroke="#F57F17" stroke-width="1.5"/>
+      <text x="290" y="1204" text-anchor="middle" font-weight="bold" fill="#E65100">conflicts 非空?</text>
+      <text x="290" y="1222" text-anchor="middle" font-size="11" fill="#5D4037">有冲突存在?</text>
+    </g>
+
+    <!-- 分支箭头 是 -->
+    <line x1="170" y1="1210" x2="110" y2="1210" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+    <text x="135" y="1206" font-size="11" font-weight="bold" fill="#1565C0">是</text>
+    <!-- 分支箭头 否 -->
+    <line x1="410" y1="1210" x2="470" y2="1210" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+    <text x="440" y="1206" font-size="11" font-weight="bold" fill="#1565C0">否</text>
+
+    <!-- 左分支: Toast 警告 -->
+    <g filter="url(#shadow)">
+      <rect x="40" y="1255" width="140" height="54" rx="10" fill="#FFECB3" stroke="#FF8F00" stroke-width="1.2"/>
+      <text x="110" y="1277" text-anchor="middle" font-weight="600" fill="#BF360C">Toast 警告</text>
+      <text x="110" y="1295" text-anchor="middle" font-size="11" fill="#3E2723">提示存在冲突</text>
+    </g>
+
+    <!-- 右分支: 刷新列表 + 绿色标签 -->
+    <g filter="url(#shadow)">
+      <rect x="460" y="1255" width="160" height="54" rx="10" fill="#C8E6C9" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="540" y="1277" text-anchor="middle" font-weight="600" fill="#1B5E20">刷新列表 + 绿色</text>
+      <text x="540" y="1295" text-anchor="middle" font-size="11" fill="#1B5E20">&quot;已激活&quot; 标签</text>
+    </g>
+
+    <!-- 汇合到结束 -->
+    <line x1="110" y1="1309" x2="110" y2="1360" stroke="#1565C0" stroke-width="1.5"/>
+    <line x1="110" y1="1360" x2="290" y2="1360" stroke="#1565C0" stroke-width="1.5"/>
+    <line x1="540" y1="1309" x2="540" y2="1360" stroke="#1565C0" stroke-width="1.5"/>
+    <line x1="540" y1="1360" x2="310" y2="1360" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+    <!-- 结束 (椭圆) -->
+    <ellipse cx="290" cy="1390" rx="40" ry="22" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.5"/>
+    <text x="290" y="1394" text-anchor="middle" font-weight="bold" fill="#0D47A1">结束</text>
+  </g>
+
+  <!-- ============================================================= -->
+  <!-- 泳道 2: deactivate_group (绿色)                                -->
+  <!-- ============================================================= -->
+  <g id="lane-2">
+    <text x="890" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#2E7D32">停用变量组 (deactivate_group)</text>
+    <rect x="620" y="40" width="540" height="960" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2" rx="6"/>
+  </g>
+
+  <g id="lane2-flow">
+    <ellipse cx="890" cy="80" rx="40" ry="22" fill="#C8E6C9" stroke="#2E7D32" stroke-width="1.5"/>
+    <text x="890" y="84" text-anchor="middle" font-weight="bold" fill="#1B5E20">开始</text>
+
+    <line x1="890" y1="102" x2="890" y2="118" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <!-- [前端] -->
+    <g filter="url(#shadow)">
+      <polygon points="720,118 1060,118 1050,172 710,172" fill="#FFF3E0" stroke="#E65100" stroke-width="1.5"/>
+      <text x="885" y="142" text-anchor="middle" fill="#3E2723">[前端] 用户点击已激活组的</text>
+      <text x="885" y="160" text-anchor="middle" fill="#3E2723">电源图标 → ipc.deactivateGroup(id)</text>
+    </g>
+
+    <line x1="890" y1="172" x2="890" y2="188" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <!-- Rust command -->
+    <g filter="url(#shadow)">
+      <rect x="720" y="188" width="340" height="58" rx="10" fill="#FFFFFF" stroke="#2E7D32" stroke-width="1.5"/>
+      <text x="735" y="212" font-weight="600" fill="#2E7D32">[Rust command]</text>
+      <text x="735" y="230" fill="#37474F">group_commands::deactivate_group(state, id)</text>
+      <text x="735" y="244" font-size="11" fill="#78909C">Tauri 命令入口</text>
+    </g>
+
+    <line x1="890" y1="246" x2="890" y2="262" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <!-- Service 深绿卡片 -->
+    <g filter="url(#shadow)">
+      <rect x="720" y="262" width="340" height="66" rx="10" fill="#388E3C" stroke="#1B5E20" stroke-width="1.5"/>
+      <text x="735" y="286" font-weight="bold" fill="#FFFFFF">[Service] EnvService::deactivate_group()</text>
+      <text x="735" y="306" fill="#C8E6C9">参数: (platform, conn, id)</text>
+      <text x="735" y="322" font-size="11" fill="#A5D6A7">核心停用逻辑</text>
+    </g>
+
+    <line x1="890" y1="328" x2="890" y2="344" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <!-- 3a -->
+    <g filter="url(#shadow)">
+      <rect x="740" y="344" width="300" height="54" rx="10" fill="#FFFFFF" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="750" y="366" font-weight="600" fill="#1B5E20">3a. 读取 EnvGroup</text>
+      <text x="750" y="384" fill="#37474F">env_group_repo.get_by_id(id) → 不存在直接返回</text>
+      <text x="750" y="396" font-size="11" fill="#78909C">(幂等设计)</text>
+    </g>
+
+    <line x1="890" y1="398" x2="890" y2="414" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <!-- 3b -->
+    <g filter="url(#shadow)">
+      <rect x="740" y="414" width="300" height="54" rx="10" fill="#FFFFFF" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="750" y="436" font-weight="600" fill="#1B5E20">3b. 移除环境变量</text>
+      <text x="750" y="454" fill="#37474F">遍历 group.variables → platform.remove_variable(name, false)</text>
+      <text x="750" y="468" font-size="11" fill="#78909C">从系统中清除变量定义</text>
+    </g>
+
+    <line x1="890" y1="468" x2="890" y2="484" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <!-- 3c -->
+    <g filter="url(#shadow)">
+      <rect x="740" y="484" width="300" height="48" rx="10" fill="#FFFFFF" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="750" y="506" font-weight="600" fill="#1B5E20">3c. 刷新环境</text>
+      <text x="750" y="524" fill="#37474F">platform.refresh_environment()</text>
+      <text x="750" y="536" font-size="11" fill="#78909C">确保系统感知到变化</text>
+    </g>
+
+    <line x1="890" y1="532" x2="890" y2="548" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <!-- 3d -->
+    <g filter="url(#shadow)">
+      <rect x="740" y="548" width="300" height="46" rx="10" fill="#FFFFFF" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="750" y="570" font-weight="600" fill="#1B5E20">3d. 更新 DB 状态</text>
+      <text x="750" y="588" fill="#37474F">env_groups.is_active = 0</text>
+      <text x="750" y="600" font-size="11" fill="#78909C">DB: env_groups 表</text>
+    </g>
+
+    <line x1="890" y1="594" x2="890" y2="610" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <!-- 3e -->
+    <g filter="url(#shadow)">
+      <rect x="740" y="610" width="300" height="56" rx="10" fill="#FFFFFF" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="750" y="632" font-weight="600" fill="#1B5E20">3e. 写入历史</text>
+      <text x="750" y="650" fill="#37474F">action_type=&apos;deactivate&apos;, before_data=序列化原 group</text>
+      <text x="750" y="666" font-size="11" fill="#78909C">DB: trash_history 表</text>
+    </g>
+
+    <line x1="890" y1="666" x2="890" y2="682" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <!-- 返回 Ok(()) -->
+    <g filter="url(#shadow)">
+      <polygon points="720,682 1060,682 1050,730 710,730" fill="#FFF3E0" stroke="#E65100" stroke-width="1.5"/>
+      <text x="885" y="712" text-anchor="middle" font-weight="600" fill="#BF360C">返回 Ok(())</text>
+      <text x="885" y="726" text-anchor="middle" font-size="10" fill="#78909C">Rust → 前端</text>
+    </g>
+
+    <line x1="890" y1="730" x2="890" y2="746" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <!-- [前端] 刷新列表 -->
+    <g filter="url(#shadow)">
+      <rect x="720" y="746" width="340" height="48" rx="10" fill="#C8E6C9" stroke="#2E7D32" stroke-width="1.2"/>
+      <text x="890" y="768" text-anchor="middle" font-weight="600" fill="#1B5E20">[前端] 刷新列表, 移除绿色 &quot;已激活&quot; 标签</text>
+      <text x="890" y="786" text-anchor="middle" font-size="11" fill="#1B5E20">用户界面状态更新</text>
+    </g>
+
+    <line x1="890" y1="794" x2="890" y2="810" stroke="#2E7D32" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+    <ellipse cx="890" cy="840" rx="40" ry="22" fill="#C8E6C9" stroke="#2E7D32" stroke-width="1.5"/>
+    <text x="890" y="844" text-anchor="middle" font-weight="bold" fill="#1B5E20">结束</text>
+  </g>
+
+  <!-- ============================================================= -->
+  <!-- 泳道 3: restore_history (橙色)                                 -->
+  <!-- ============================================================= -->
+  <g id="lane-3">
+    <text x="1470" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#E65100">操作历史还原 (restore_history)</text>
+    <rect x="1200" y="40" width="540" height="1280" fill="#FFF3E0" stroke="#E65100" stroke-width="2" rx="6"/>
+  </g>
+
+  <g id="lane3-flow">
+    <ellipse cx="1470" cy="80" rx="40" ry="22" fill="#FFE0B2" stroke="#E65100" stroke-width="1.5"/>
+    <text x="1470" y="84" text-anchor="middle" font-weight="bold" fill="#BF360C">开始</text>
+
+    <line x1="1470" y1="102" x2="1470" y2="118" stroke="#E65100" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+    <!-- [前端] -->
+    <g filter="url(#shadow)">
+      <polygon points="1300,118 1640,118 1630,168 1290,168" fill="#FFF3E0" stroke="#E65100" stroke-width="1.5"/>
+      <text x="1465" y="142" text-anchor="middle" fill="#3E2723">[前端] HistoryPage 中用户点击</text>
+      <text x="1465" y="160" text-anchor="middle" fill="#3E2723">某条记录的还原图标 → ipc.restoreHistory(record.id)</text>
+    </g>
+
+    <line x1="1470" y1="168" x2="1470" y2="184" stroke="#E65100" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+    <!-- Rust command -->
+    <g filter="url(#shadow)">
+      <rect x="1300" y="184" width="340" height="56" rx="10" fill="#FFFFFF" stroke="#E65100" stroke-width="1.5"/>
+      <text x="1315" y="206" font-weight="600" fill="#E65100">[Rust command]</text>
+      <text x="1315" y="224" fill="#37474F">history_commands::restore_history(state, id)</text>
+      <text x="1315" y="238" font-size="11" fill="#78909C">Tauri 命令入口</text>
+    </g>
+
+    <line x1="1470" y1="240" x2="1470" y2="256" stroke="#E65100" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+    <!-- Service 橙色卡片 -->
+    <g filter="url(#shadow)">
+      <rect x="1300" y="256" width="340" height="60" rx="10" fill="#EF6C00" stroke="#BF360C" stroke-width="1.5"/>
+      <text x="1315" y="280" font-weight="bold" fill="#FFFFFF">[Service] 还原逻辑</text>
+      <text x="1315" y="300" fill="#FFE0B2">根据 action_type 分支处理</text>
+      <text x="1315" y="314" font-size="11" fill="#FFCC80">核心还原逻辑</text>
+    </g>
+
+    <line x1="1470" y1="316" x2="1470" y2="332" stroke="#E65100" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+    <!-- 3a -->
+    <g filter="url(#shadow)">
+      <rect x="1320" y="332" width="300" height="54" rx="10" fill="#FFFFFF" stroke="#E65100" stroke-width="1.2"/>
+      <text x="1330" y="354" font-weight="600" fill="#BF360C">3a. 读取历史记录</text>
+      <text x="1330" y="372" fill="#37474F">history_repo.get_by_id(id) → HistoryRecord</text>
+      <text x="1330" y="386" font-size="11" fill="#78909C">获取快照数据 (action_type + before_data + after_data)</text>
+    </g>
+
+    <line x1="1470" y1="386" x2="1470" y2="402" stroke="#E65100" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+    <!-- 决策菱形: match action_type -->
+    <g filter="url(#shadow)">
+      <polygon points="1470,402 1610,444 1470,486 1330,444" fill="#FFE0B2" stroke="#E65100" stroke-width="1.5"/>
+      <text x="1470" y="438" text-anchor="middle" font-weight="bold" fill="#BF360C">match</text>
+      <text x="1470" y="458" text-anchor="middle" font-size="11" fill="#5D4037">record.action_type</text>
+      <text x="1470" y="476" text-anchor="middle" font-size="11" fill="#5D4037">(6 种分支)</text>
+    </g>
+
+    <!-- 垂直延伸线 -->
+    <line x1="1470" y1="486" x2="1470" y2="510" stroke="#E65100" stroke-width="1.5"/>
+
+    <!-- 分支1: "delete" -->
+    <g filter="url(#shadow)">
+      <rect x="1230" y="510" width="480" height="58" rx="10" fill="#FFFFFF" stroke="#E65100" stroke-width="1.2"/>
+      <text x="1240" y="532" font-weight="600" fill="#BF360C">&quot;delete&quot; → 恢复被删除的组</text>
+      <text x="1240" y="550" fill="#37474F">from before_data 反序列化 EnvGroup → env_group_repo.insert()</text>
+      <text x="1240" y="566" font-size="11" fill="#78909C">同时对每个变量调用 platform.set_variable() 恢复到系统</text>
+    </g>
+
+    <!-- 分支2: "edit" -->
+    <g filter="url(#shadow)">
+      <rect x="1230" y="578" width="480" height="52" rx="10" fill="#FFFFFF" stroke="#E65100" stroke-width="1.2"/>
+      <text x="1240" y="600" font-weight="600" fill="#BF360C">&quot;edit&quot; → 恢复被编辑的组</text>
+      <text x="1240" y="618" fill="#37474F">from before_data 反序列化 → env_group_repo.update()</text>
+      <text x="1240" y="632" font-size="11" fill="#78909C">恢复到编辑前的状态</text>
+    </g>
+
+    <!-- 分支3: "create" -->
+    <g filter="url(#shadow)">
+      <rect x="1230" y="644" width="480" height="52" rx="10" fill="#FFFFFF" stroke="#E65100" stroke-width="1.2"/>
+      <text x="1240" y="666" font-weight="600" fill="#BF360C">&quot;create&quot; → 撤销创建</text>
+      <text x="1240" y="684" fill="#37474F">env_group_repo.delete(record.target_id) (撤销创建)</text>
+      <text x="1240" y="700" font-size="11" fill="#78909C">彻底清除误创建的组 (若已激活则同步移除系统变量)</text>
+    </g>
+
+    <!-- 分支4: "activate" -->
+    <g filter="url(#shadow)">
+      <rect x="1230" y="712" width="480" height="52" rx="10" fill="#FFFFFF" stroke="#E65100" stroke-width="1.2"/>
+      <text x="1240" y="734" font-weight="600" fill="#BF360C">&quot;activate&quot; → 撤销激活</text>
+      <text x="1240" y="752" fill="#37474F">调用 EnvService::deactivate_group(platform, conn, target_id)</text>
+      <text x="1240" y="768" font-size="11" fill="#78909C">复用停用逻辑 (完整的变量卸载 + DB 状态变更)</text>
+    </g>
+
+    <!-- 分支5: "deactivate" -->
+    <g filter="url(#shadow)">
+      <rect x="1230" y="780" width="480" height="52" rx="10" fill="#FFFFFF" stroke="#E65100" stroke-width="1.2"/>
+      <text x="1240" y="802" font-weight="600" fill="#BF360C">&quot;deactivate&quot; → 撤销停用</text>
+      <text x="1240" y="820" fill="#37474F">调用 EnvService::activate_group(platform, conn, target_id)</text>
+      <text x="1240" y="836" font-size="11" fill="#78909C">复用激活逻辑 (恢复变量 + 完整冲突检测)</text>
+    </g>
+
+    <!-- 分支6: 其他 -->
+    <g filter="url(#shadow)">
+      <rect x="1230" y="848" width="480" height="44" rx="10" fill="#EEEEEE" stroke="#757575" stroke-width="1.2"/>
+      <text x="1470" y="868" text-anchor="middle" font-weight="600" fill="#424242">其他类型 → 不处理 (安全默认)</text>
+      <text x="1470" y="886" text-anchor="middle" font-size="11" fill="#616161">避免对未知 action_type 执行不安全操作</text>
+    </g>
+
+    <!-- 汇合线 -->
+    <line x1="1470" y1="892" x2="1470" y2="918" stroke="#E65100" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+    <!-- 3c: 删除历史条目 -->
+    <g filter="url(#shadow)">
+      <rect x="1320" y="918" width="300" height="60" rx="10" fill="#FFE0B2" stroke="#E65100" stroke-width="1.2"/>
+      <text x="1330" y="942" font-weight="600" fill="#BF360C">3c. 删除已还原的历史条目</text>
+      <text x="1330" y="960" fill="#37474F">history_repo.delete(id)</text>
+      <text x="1330" y="976" font-size="11" fill="#78909C">成功后删除条目, 防止重复还原导致意外状态</text>
+    </g>
+
+    <line x1="1470" y1="978" x2="1470" y2="994" stroke="#E65100" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+    <!-- 返回 -->
+    <g filter="url(#shadow)">
+      <polygon points="1300,994 1640,994 1630,1040 1290,1040" fill="#FFF3E0" stroke="#E65100" stroke-width="1.5"/>
+      <text x="1465" y="1022" text-anchor="middle" font-weight="600" fill="#BF360C">返回 Ok(())</text>
+      <text x="1465" y="1036" text-anchor="middle" font-size="10" fill="#78909C">Rust → 前端</text>
+    </g>
+
+    <line x1="1470" y1="1040" x2="1470" y2="1056" stroke="#E65100" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+    <!-- [前端] 刷新 -->
+    <g filter="url(#shadow)">
+      <rect x="1300" y="1056" width="340" height="48" rx="10" fill="#FFE0B2" stroke="#E65100" stroke-width="1.2"/>
+      <text x="1470" y="1078" text-anchor="middle" font-weight="600" fill="#BF360C">[前端] 刷新列表 + 刷新历史记录</text>
+      <text x="1470" y="1096" text-anchor="middle" font-size="11" fill="#BF360C">同步显示还原后的最新状态</text>
+    </g>
+
+    <line x1="1470" y1="1104" x2="1470" y2="1120" stroke="#E65100" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+    <ellipse cx="1470" cy="1150" rx="40" ry="22" fill="#FFE0B2" stroke="#E65100" stroke-width="1.5"/>
+    <text x="1470" y="1154" text-anchor="middle" font-weight="bold" fill="#BF360C">结束</text>
+  </g>
+
+  <!-- ============================================================= -->
+  <!-- 泳道 4: create_backup (紫色)                                   -->
+  <!-- ============================================================= -->
+  <g id="lane-4">
+    <text x="2050" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#6A1B9A">创建备份 (create_backup)</text>
+    <rect x="1780" y="40" width="540" height="820" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2" rx="6"/>
+  </g>
+
+  <g id="lane4-flow">
+    <ellipse cx="2050" cy="80" rx="40" ry="22" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.5"/>
+    <text x="2050" y="84" text-anchor="middle" font-weight="bold" fill="#4A148C">开始</text>
+
+    <line x1="2050" y1="102" x2="2050" y2="118" stroke="#6A1B9A" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+    <!-- [前端] -->
+    <g filter="url(#shadow)">
+      <polygon points="1880,118 2220,118 2210,172 1870,172" fill="#FFF3E0" stroke="#E65100" stroke-width="1.5"/>
+      <text x="2045" y="140" text-anchor="middle" fill="#3E2723">[前端] 用户输入备份名称 + scope</text>
+      <text x="2045" y="158" text-anchor="middle" fill="#3E2723">→ ipc.createBackup(name, scope)</text>
+      <text x="2045" y="170" text-anchor="middle" font-size="10" fill="#78909C">(页面暂未暴露, 命令已实现)</text>
+    </g>
+
+    <line x1="2050" y1="172" x2="2050" y2="188" stroke="#6A1B9A" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+    <!-- Rust command -->
+    <g filter="url(#shadow)">
+      <rect x="1880" y="188" width="340" height="56" rx="10" fill="#FFFFFF" stroke="#6A1B9A" stroke-width="1.5"/>
+      <text x="1895" y="210" font-weight="600" fill="#6A1B9A">[Rust command]</text>
+      <text x="1895" y="228" fill="#37474F">backup_commands::create_backup(state, name, scope)</text>
+      <text x="1895" y="242" font-size="11" fill="#78909C">Tauri 命令入口</text>
+    </g>
+
+    <line x1="2050" y1="244" x2="2050" y2="260" stroke="#6A1B9A" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+    <!-- Service 紫色卡片 -->
+    <g filter="url(#shadow)">
+      <rect x="1880" y="260" width="340" height="58" rx="10" fill="#7B1FA2" stroke="#4A148C" stroke-width="1.5"/>
+      <text x="1895" y="284" font-weight="bold" fill="#FFFFFF">[Service] 备份逻辑</text>
+      <text x="1895" y="304" fill="#F3E5F5">生成完整 DB + Env 快照</text>
+      <text x="1895" y="318" font-size="11" fill="#CE93D8">用于一键恢复到历史状态</text>
+    </g>
+
+    <line x1="2050" y1="318" x2="2050" y2="334" stroke="#6A1B9A" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+    <!-- 3a -->
+    <g filter="url(#shadow)">
+      <rect x="1900" y="334" width="300" height="54" rx="10" fill="#FFFFFF" stroke="#6A1B9A" stroke-width="1.2"/>
+      <text x="1910" y="356" font-weight="600" fill="#4A148C">3a. 生成 DB 快照</text>
+      <text x="1910" y="374" fill="#37474F">env_group_repo.get_all(conn) → 序列化为 JSON</text>
+      <text x="1910" y="390" font-size="11" fill="#78909C">保存为 db_snapshot</text>
+    </g>
+
+    <line x1="2050" y1="388" x2="2050" y2="404" stroke="#6A1B9A" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+    <!-- 3b -->
+    <g filter="url(#shadow)">
+      <rect x="1900" y="404" width="300" height="62" rx="10" fill="#FFFFFF" stroke="#6A1B9A" stroke-width="1.2"/>
+      <text x="1910" y="426" font-weight="600" fill="#4A148C">3b. 生成环境变量快照</text>
+      <text x="1910" y="444" fill="#37474F">platform.get_all_variables(false)</text>
+      <text x="1910" y="460" fill="#37474F">+ platform.get_all_variables(true)</text>
+      <text x="1910" y="474" font-size="11" fill="#78909C">合并为 JSON 作为 env_snapshot</text>
+    </g>
+
+    <line x1="2050" y1="466" x2="2050" y2="482" stroke="#6A1B9A" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+    <!-- 3c -->
+    <g filter="url(#shadow)">
+      <rect x="1900" y="482" width="300" height="66" rx="10" fill="#FFFFFF" stroke="#6A1B9A" stroke-width="1.2"/>
+      <text x="1910" y="504" font-weight="600" fill="#4A148C">3c. 持久化备份</text>
+      <text x="1910" y="522" fill="#37474F">backup_repo.insert(conn, Backup {</text>
+      <text x="1920" y="538" fill="#37474F">id: uuid, name, scope,</text>
+      <text x="1920" y="554" fill="#37474F">db_snapshot, env_snapshot, created_at })</text>
+      <text x="1910" y="556" font-size="11" fill="#78909C">DB: backups 表</text>
+    </g>
+
+    <line x1="2050" y1="548" x2="2050" y2="564" stroke="#6A1B9A" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+    <!-- 返回 Backup 对象 -->
+    <g filter="url(#shadow)">
+      <polygon points="1880,564 2220,564 2210,610 1870,610" fill="#FFF3E0" stroke="#E65100" stroke-width="1.5"/>
+      <text x="2045" y="592" text-anchor="middle" font-weight="600" fill="#BF360C">返回 Backup 对象</text>
+      <text x="2045" y="606" text-anchor="middle" font-size="10" fill="#78909C">Rust → 前端 (含 id + 元数据)</text>
+    </g>
+
+    <line x1="2050" y1="610" x2="2050" y2="626" stroke="#6A1B9A" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+    <!-- [前端] 显示成功 -->
+    <g filter="url(#shadow)">
+      <rect x="1880" y="626" width="340" height="48" rx="10" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.2"/>
+      <text x="2050" y="648" text-anchor="middle" font-weight="600" fill="#4A148C">[前端] 显示成功提示 + 刷新备份列表</text>
+      <text x="2050" y="666" text-anchor="middle" font-size="11" fill="#4A148C">用户可在备份管理中查看/恢复此备份</text>
+    </g>
+
+    <line x1="2050" y1="674" x2="2050" y2="690" stroke="#6A1B9A" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+    <ellipse cx="2050" cy="720" rx="40" ry="22" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.5"/>
+    <text x="2050" y="724" text-anchor="middle" font-weight="bold" fill="#4A148C">结束</text>
+  </g>
+
+  <!-- ============================================================= -->
+  <!-- 图例 Legend                                                    -->
+  <!-- ============================================================= -->
+  <g id="legend">
+    <rect x="40" y="1530" width="900" height="70" rx="8" fill="#FFFFFF" stroke="#BDBDBD" stroke-width="1"/>
+    <text x="56" y="1554" font-size="14" font-weight="bold" fill="#212121">图例 Legend</text>
+
+    <!-- 开始/结束 -->
+    <ellipse cx="140" cy="1578" rx="30" ry="16" fill="#E0E0E0" stroke="#616161"/>
+    <text x="140" y="1581" text-anchor="middle" font-size="11" fill="#212121">开始/结束</text>
+
+    <!-- 处理步骤 -->
+    <rect x="220" cy="1562" width="60" height="32" rx="8" fill="#FFFFFF" stroke="#616161"/>
+    <text x="250" y="1582" text-anchor="middle" font-size="11" fill="#212121">处理步骤</text>
+
+    <!-- Service 卡片 (深色) -->
+    <rect x="320" cy="1562" width="60" height="32" rx="8" fill="#1976D2" stroke="#0D47A1"/>
+    <text x="350" y="1582" text-anchor="middle" font-size="11" fill="#FFFFFF">Service</text>
+
+    <!-- 决策 -->
+    <polygon points="430,1562 460,1578 430,1594 400,1578" fill="#FFF9C4" stroke="#F57F17"/>
+    <text x="430" y="1582" text-anchor="middle" font-size="10" fill="#5D4037">决策</text>
+
+    <!-- I/O -->
+    <polygon points="490,1562 560,1562 550,1594 480,1594" fill="#FFF3E0" stroke="#E65100"/>
+    <text x="520" y="1582" text-anchor="middle" font-size="11" fill="#3E2723">前端 I/O</text>
+
+    <!-- 数据操作 -->
+    <rect x="590" cy="1562" width="60" height="32" rx="8" fill="#E8F5E9" stroke="#2E7D32"/>
+    <text x="620" y="1582" text-anchor="middle" font-size="11" fill="#1B5E20">DB/平台</text>
+
+    <!-- 冲突检测 -->
+    <rect x="680" cy="1562" width="60" height="32" rx="8" fill="#FFF3E0" stroke="#EF6C00"/>
+    <text x="710" y="1582" text-anchor="middle" font-size="11" fill="#BF360C">冲突</text>
+
+    <!-- 互斥处理 -->
+    <rect x="770" cy="1562" width="60" height="32" rx="8" fill="#FCE4EC" stroke="#C2185B"/>
+    <text x="800" y="1582" text-anchor="middle" font-size="11" fill="#880E4F">互斥</text>
+
+    <!-- 连接线说明 -->
+    <line x1="850" y1="1578" x2="880" y2="1578" stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+    <text x="890" y="1582" font-size="11" fill="#212121">流程方向</text>
+  </g>
+
+  <!-- 标题 -->
+  <text x="1200" y="1600" text-anchor="middle" font-size="10" fill="#9E9E9E">Switch-Env 核心业务流程图 · Core Business Flowchart</text>
+</svg>
