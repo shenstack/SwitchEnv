@@ -196,12 +196,13 @@ export function EnvVarManager() {
 
   // ---------- 导入导出 ----------
   const handleExport = async () => {
+    // 必须有勾选才能导出。无勾选时按钮本身是 disabled，这里作为二次兜底。
+    const ids = [...selectedIds];
+    if (ids.length === 0) {
+      showToast('请先勾选要导出的变量组', 'warning');
+      return;
+    }
     try {
-      const ids = selectedIds.size > 0 ? [...selectedIds] : groups.map((g) => g.id);
-      if (ids.length === 0) {
-        showToast('没有可导出的变量组', 'warning');
-        return;
-      }
       const stamp = new Date().toISOString().slice(0, 10);
       const filePath = await saveDialog({
         title: '导出变量组',
@@ -308,7 +309,9 @@ export function EnvVarManager() {
           <>
             <button
               onClick={handleExport}
-              className="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+              disabled
+              className="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg opacity-40 cursor-not-allowed"
+              title="请先勾选要导出的变量组"
             >
               <Download size={14} className="inline mr-1" /> 导出
             </button>
