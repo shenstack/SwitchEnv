@@ -1,0 +1,21 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Default capabilities for the main window. fs 插件：read-all + write-all 授予全部读写命令权限；fs:scope 的 allow 规则将命中范围扩展到任意路径（用于通过对话框选择 JSON/txt 文件进行导入/导出）。",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "shell:allow-open",
+    "dialog:default",
+    "clipboard-manager:default",
+    "notification:default",
+    "fs:default",
+    "fs:read-all",
+    "fs:write-all",
+    {
+      "identifier": "fs:scope",
+      "description": "允许 fs 插件命中任意路径的 scope（path 通配 **）。配合 dialog 选择的文件路径一同使用。",
+      "allow": [{ "path": "**" }]
+    }
+  ]
+}
