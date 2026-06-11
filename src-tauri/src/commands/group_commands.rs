@@ -17,7 +17,6 @@ pub async fn create_group(
     name: String,
     description: String,
     variables: Vec<EnvVariable>,
-    chain_id: Option<String>,
 ) -> AppResult<EnvGroup> {
     let now = chrono::Utc::now().timestamp();
     let group = EnvGroup {
@@ -26,7 +25,6 @@ pub async fn create_group(
         description,
         variables,
         is_active: false,
-        chain_id,
         created_at: now,
         updated_at: now,
     };
@@ -58,7 +56,6 @@ pub async fn update_group(
     name: Option<String>,
     description: Option<String>,
     variables: Option<Vec<EnvVariable>>,
-    chain_id: Option<Option<String>>,
 ) -> AppResult<EnvGroup> {
     let now = chrono::Utc::now().timestamp();
 
@@ -70,7 +67,6 @@ pub async fn update_group(
         if let Some(n) = name { group.name = n; }
         if let Some(d) = description { group.description = d; }
         if let Some(v) = variables { group.variables = v; }
-        if let Some(c) = chain_id { group.chain_id = c; }
         group.updated_at = now;
 
         env_group_repo::EnvGroupRepository::update(conn, &group)?;
@@ -128,12 +124,17 @@ pub async fn delete_group(state: State<'_, AppState>, id: String) -> AppResult<(
     Ok(())
 }
 
+/// 激活变量组。
+/// force=false：仅检测冲突（与系统注册表变量和其它已激活组的同名变量），
+///   若存在冲突直接返回结果 success=false，不做写入。
+/// force=true：跳过冲突检测，直接写入系统变量并刷新环境。
 #[tauri::command]
 pub async fn activate_group(
     state: State<'_, AppState>,
     id: String,
+    force: Option<bool>,
 ) -> AppResult<ActivationResult> {
-    EnvService::activate_group(&state, &id).await
+    EnvService::activate_group(&state, &id, force.unwrap_or(false)).await
 }
 
 #[tauri::command]

@@ -1,6 +1,8 @@
 use crate::models::{EnvVar, ShellConfigInfo};
 use crate::platforms::{PlatformError, PlatformInfo, PlatformService};
 use async_trait::async_trait;
+use std::ffi::OsStr;
+use std::os::windows::ffi::OsStrExt;
 use std::process::Command;
 use winreg::enums::{HKEY_LOCAL_MACHINE, KEY_READ, KEY_SET_VALUE};
 use winreg::RegKey;
@@ -10,8 +12,37 @@ const SYSTEM_ENV_SUBKEY: &str = r"SYSTEM\CurrentControlSet\Control\Session Manag
 /// 用户环境变量在注册表中的子路径
 const USER_ENV_SUBKEY: &str = "Environment";
 
-/// setx 对单个值长度的限制（微软文档），超过时使用注册表 API 写入
-const SETX_VALUE_LIMIT: usize = 1024;
+/// 广播到所有顶层窗口（SendMessageTimeout 的目标句柄）
+const HWND_BROADCAST: usize = 0xFFFF;
+/// 设置变更消息（WM_SETTINGCHANGE / WM_WININICHANGE）
+const WM_SETTINGCHANGE: u32 = 0x001A;
+/// 如果接收消息的进程挂起，不要一直等待
+const SMTO_ABORTIFHUNG: u32 = 0x0002;
+/// 单次广播的超时时间（毫秒），5s 足以覆盖绝大多数场景
+const BROADCAST_TIMEOUT_MS: u32 = 5000;
+
+/// 通过 Win32 FFI 直接调用 SendMessageTimeoutW，避免每次 spawn PowerShell + C# Add-Type
+/// 编译消耗 ~300-1500ms。
+extern "system" {
+    /// 发送消息到顶层窗口，并设置超时，防止因接收方挂起而阻塞。
+    fn SendMessageTimeoutW(
+        hWnd: usize,
+        Msg: u32,
+        wParam: usize,
+        lParam: *const u16,
+        fuFlags: u32,
+        uTimeout: u32,
+        lpdwResult: *mut usize,
+    ) -> usize;
+}
+
+/// 将 UTF-8 Rust 字符串转换为以 NUL 结尾的 UTF-16 Vec<u16>，供 Win32 W 系列 API 使用
+fn to_wide(s: &str) -> Vec<u16> {
+    OsStr::new(s)
+        .encode_wide()
+        .chain(std::iter::once(0))
+        .collect()
+}
 
 pub struct WindowsPlatformService;
 
@@ -49,16 +80,24 @@ impl WindowsPlatformService {
             .is_ok()
     }
 
-    /// 向系统发送 WM_SETTINGCHANGE 广播，让其它进程感知环境变量变更
+    /// 向系统发送 WM_SETTINGCHANGE 广播，让其它进程感知环境变量变更。
+    /// 使用 Win32 FFI 直接调用 SendMessageTimeoutW，取代原来的 PowerShell 方案，
+    /// 将单次广播从 300-1500ms 降至 < 5ms。
     fn broadcast_setting_change() {
-        // 通过 PowerShell 调用 Win32 API 广播设置变更
-        let _ = Command::new("powershell")
-            .args([
-                "-NoProfile",
-                "-Command",
-                "$code = @'\nusing System;\nusing System.Runtime.InteropServices;\npublic static class Win32 {\n    [DllImport(\"user32.dll\", CharSet=CharSet.Auto)]\n    public static extern bool SendMessageTimeout(IntPtr hWnd, uint Msg, UIntPtr wParam, string lParam, uint fuFlags, uint uTimeout, out UIntPtr lpdwResult);\n}\n'@\nAdd-Type -TypeDefinition $code -Language CSharp;\n$HWND_BROADCAST = [IntPtr]0xffff;\n$WM_SETTINGCHANGE = 0x1a;\n$result = [UIntPtr]::Zero;\n[Win32]::SendMessageTimeout($HWND_BROADCAST, $WM_SETTINGCHANGE, [UIntPtr]::Zero, \"Environment\", 0x0002, 5000, [ref]$result) | Out-Null;",
-            ])
-            .output();
+        let env_wide = to_wide("Environment");
+        let mut result: usize = 0;
+        // 忽略返回值，广播失败不应影响整体写入流程
+        unsafe {
+            SendMessageTimeoutW(
+                HWND_BROADCAST,
+                WM_SETTINGCHANGE,
+                0,
+                env_wide.as_ptr(),
+                SMTO_ABORTIFHUNG,
+                BROADCAST_TIMEOUT_MS,
+                &mut result,
+            );
+        }
     }
 }
 
@@ -93,7 +132,10 @@ impl PlatformService for WindowsPlatformService {
         Ok(vars)
     }
 
-    /// 写入/更新环境变量。用户变量用 setx（Windows 标准持久化），长值/系统变量走 winreg
+    /// 写入/更新环境变量。统一使用 winreg 直接写入注册表，
+    /// 避免每变量 spawn 一次 setx.exe 进程的开销；
+    /// 广播由调用方在整组写入完成后通过 refresh_environment 统一执行，
+    /// 避免每变量广播一次导致的 N 倍放大延迟。
     async fn set_variable(
         &self,
         name: &str,
@@ -106,30 +148,16 @@ impl PlatformService for WindowsPlatformService {
             ));
         }
 
-        if value.len() > SETX_VALUE_LIMIT || is_system_scope {
-            let key = Self::open_key_write(is_system_scope)?;
-            key.set_value(name, &value)
-                .map_err(|e| PlatformError::RegistryError(e.to_string()))?;
-        } else {
-            // 用户变量且长度在 setx 范围内
-            let output = Command::new("setx")
-                .args([name, value])
-                .output()
-                .map_err(|e| PlatformError::CommandFailed(e.to_string()))?;
+        // 统一走注册表 API（无论用户/系统变量、无论值长短），
+        // 不再区分 setx 与 winreg，避免 spawn 外部进程。
+        let key = Self::open_key_write(is_system_scope)?;
+        key.set_value(name, &value)
+            .map_err(|e| PlatformError::RegistryError(e.to_string()))?;
 
-            if !output.status.success() {
-                return Err(PlatformError::RegistryError(format!(
-                    "setx 写入失败: {}",
-                    String::from_utf8_lossy(&output.stderr)
-                )));
-            }
-        }
-
-        Self::broadcast_setting_change();
         Ok(())
     }
 
-    /// 删除环境变量
+    /// 删除环境变量。广播由调用方整组完成后统一执行。
     async fn remove_variable(
         &self,
         name: &str,
@@ -145,7 +173,6 @@ impl PlatformService for WindowsPlatformService {
         key.delete_value(name)
             .map_err(|e| PlatformError::RegistryError(e.to_string()))?;
 
-        Self::broadcast_setting_change();
         Ok(())
     }
 
@@ -159,32 +186,19 @@ impl PlatformService for WindowsPlatformService {
         Ok(Self::is_elevated())
     }
 
-    /// 刷新环境变量（广播 + 同步到当前进程）
+    /// 刷新环境变量：
+    /// 仅执行一次 WM_SETTINGCHANGE 广播，让系统/新进程感知注册表变更。
+    /// 不再全量重写当前进程的环境块 —— 当前应用无需从自身进程环境块读取业务变量，
+    /// 全量 set_var 既耗时又不必要。
     async fn refresh_environment(&self) -> Result<(), PlatformError> {
         Self::broadcast_setting_change();
-
-        // 从注册表重新合并用户 + 系统变量到当前进程的环境块
-        let user_vars = self.get_all_variables(false).await.unwrap_or_default();
-        let system_vars = self.get_all_variables(true).await.unwrap_or_default();
-
-        let mut merged: std::collections::HashMap<String, String> =
-            std::collections::HashMap::new();
-        for v in system_vars {
-            merged.insert(v.name, v.value);
-        }
-        for v in user_vars {
-            merged.insert(v.name, v.value);
-        }
-
-        for (k, v) in merged {
-            std::env::set_var(&k, &v);
-        }
-
         Ok(())
     }
 
     fn get_value_length_limit(&self) -> usize {
-        SETX_VALUE_LIMIT
+        // 使用 winreg 直接写入，不再受 setx 1024 字符限制，
+        // 这里返回一个大值保留兼容上层逻辑。
+        32767
     }
 
     /// 打开系统环境变量设置面板

@@ -17,7 +17,6 @@ export interface EnvGroup {
   description: string;
   variables: EnvVariable[];
   isActive: boolean;
-  chainId: string | null;
   createdAt: number;
   updatedAt: number;
 }
@@ -26,12 +25,13 @@ export interface EnvVarConflict {
   name: string;
   existingValue: string;
   newValue: string;
+  source: string; // 'system' 或某个已激活组的 id
+  sourceGroupName?: string;
 }
 
 export interface ActivationResult {
   success: boolean;
   conflicts: EnvVarConflict[];
-  deactivatedGroups: string[];
   errors: string[];
 }
 
@@ -42,16 +42,6 @@ export interface Template {
   id: string;
   name: string;
   keys: string[];
-  createdAt: number;
-  updatedAt: number;
-}
-
-/**
- * 锁链：互斥分组集合，同一锁链下同一时间只能有一个变量组激活。
- */
-export interface Chain {
-  id: string;
-  name: string;
   createdAt: number;
   updatedAt: number;
 }

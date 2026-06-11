@@ -1,5 +1,4 @@
 pub mod backup_commands;
-pub mod chain_commands;
 pub mod env_commands;
 pub mod group_commands;
 pub mod group_io_commands;

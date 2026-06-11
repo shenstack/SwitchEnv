@@ -58,7 +58,7 @@ pub async fn restore_history(state: State<'_, AppState>, id: String) -> AppResul
             let _ = EnvService::deactivate_group(&state, &record.target_id).await;
         }
         "deactivate" => {
-            let _ = EnvService::activate_group(&state, &record.target_id).await;
+            let _ = EnvService::activate_group(&state, &record.target_id, true).await;
         }
         _ => {}
     }

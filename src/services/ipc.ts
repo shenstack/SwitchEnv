@@ -1,5 +1,15 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { EnvVar, EnvGroup, ActivationResult, HistoryRecord, Backup, AppSettings, ShellConfigInfo, Template, Chain, EnvVarConflict } from '../types';
+import type {
+  EnvVar,
+  EnvGroup,
+  ActivationResult,
+  HistoryRecord,
+  Backup,
+  AppSettings,
+  ShellConfigInfo,
+  Template,
+  EnvVarConflict,
+} from '../types';
 
 // ===== 环境变量 =====
 export async function getAllEnvVars(isSystem: boolean): Promise<EnvVar[]> {
@@ -35,29 +45,45 @@ export async function getAllGroups(): Promise<EnvGroup[]> {
   return invoke('get_all_groups');
 }
 
-export async function createGroup(name: string, description: string, variables: { name: string; value: string; isHidden: boolean }[], chainId: string | null): Promise<EnvGroup> {
-  return invoke('create_group', { name, description, variables, chainId });
+export async function createGroup(
+  name: string,
+  description: string,
+  variables: { name: string; value: string; isHidden: boolean }[],
+): Promise<EnvGroup> {
+  return invoke('create_group', { name, description, variables });
 }
 
-export async function updateGroup(id: string, name: string | null, description: string | null, variables: { name: string; value: string; isHidden: boolean }[] | null, chainId: string | null | undefined): Promise<EnvGroup> {
-  return invoke('update_group', { id, name, description, variables, chainId });
+export async function updateGroup(
+  id: string,
+  name: string | null,
+  description: string | null,
+  variables: { name: string; value: string; isHidden: boolean }[] | null,
+): Promise<EnvGroup> {
+  return invoke('update_group', { id, name, description, variables });
 }
 
 export async function deleteGroup(id: string): Promise<void> {
   return invoke('delete_group', { id });
 }
 
-export async function activateGroup(id: string): Promise<ActivationResult> {
-  return invoke('activate_group', { id });
+/**
+ * 激活变量组。
+ * force=false（默认）：仅检测冲突，若存在 conflicts 则返回 success=false，
+ *   不做任何写入。
+ * force=true：忽略冲突，直接写入系统变量并刷新环境。
+ */
+export async function activateGroup(
+  id: string,
+  force: boolean = false,
+): Promise<ActivationResult> {
+  return invoke('activate_group', { id, force });
 }
 
 export async function deactivateGroup(id: string): Promise<void> {
   return invoke('deactivate_group', { id });
 }
 
-/**
- * 模板相关命令。
- */
+// ===== 模板 =====
 export async function getAllTemplates(): Promise<Template[]> {
   return invoke('get_all_templates');
 }
@@ -81,35 +107,7 @@ export async function deleteTemplate(id: string): Promise<void> {
   return invoke('delete_template', { id });
 }
 
-/**
- * 锁链相关命令。
- */
-export async function getAllChains(): Promise<Chain[]> {
-  return invoke('get_all_chains');
-}
-
-export async function createChain(name: string): Promise<Chain> {
-  return invoke('create_chain', { name });
-}
-
-export async function updateChain(id: string, name: string): Promise<Chain> {
-  return invoke('update_chain', { id, name });
-}
-
-export async function deleteChain(id: string): Promise<void> {
-  return invoke('delete_chain', { id });
-}
-
-export async function assignGroupToChain(
-  groupId: string,
-  chainId: string | null,
-): Promise<void> {
-  return invoke('assign_group_to_chain', { groupId, chainId });
-}
-
-/**
- * 导入导出与批量删除相关命令。
- */
+// ===== 导入导出 / 批量 / 冲突检测 =====
 export async function exportGroups(
   groupIds?: string[],
   savePath?: string,
@@ -125,6 +123,11 @@ export async function batchDeleteGroups(ids: string[]): Promise<number> {
   return invoke('batch_delete_groups', { ids });
 }
 
+/**
+ * 检测变量组与当前系统环境（用户环境变量）的冲突。
+ * 激活流程中通常直接使用 activateGroup(id, force=false) 获取 conflicts，
+ * 本接口用于详情页预览冲突。
+ */
 export async function detectConflicts(
   groupId: string,
 ): Promise<EnvVarConflict[]> {

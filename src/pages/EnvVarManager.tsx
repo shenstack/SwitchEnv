@@ -1,21 +1,22 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Power, PowerOff, Edit3, Trash2, Copy, ChevronDown, ChevronRight, RefreshCw, Download, Upload, FileText, Link2, Unlink, FileJson, Eye, EyeOff, X, CheckSquare, Square } from 'lucide-react';
+import { Plus, Power, PowerOff, Edit3, Trash2, Copy, ChevronDown, ChevronRight, RefreshCw, Download, Upload, FileText, FileJson, Eye, EyeOff, X, CheckSquare, Square } from 'lucide-react';
 import { open as openDialog, save as saveDialog } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
 import * as ipc from '../services/ipc';
 import { useToast } from '../components/ToastProvider';
 import { Modal } from '../components/Modal';
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import type { EnvGroup, EnvVariable, Template, Chain, EnvVarConflict } from '../types';
+import type { EnvGroup, EnvVariable, Template, EnvVarConflict } from '../types';
 
 /**
  * 环境变量组管理主视图。
- * 功能：创建/编辑/删除/激活/停用、锁链分配、模板管理、导入导出、批量操作、搜索、排序。
+ * 功能：创建/编辑/删除/激活/停用、模板管理、导入导出、批量操作、搜索、排序。
+ * 激活时会同时检测「系统环境变量」与「其他已激活变量组」中的同名变量，
+ * 若存在差异则提示用户，用户确认后以 force=true 覆盖。
  */
 export function EnvVarManager() {
   const [groups, setGroups] = useState<EnvGroup[]>([]);
   const [templates, setTemplates] = useState<Template[]>([]);
-  const [chains, setChains] = useState<Chain[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [sortMode, setSortMode] = useState<'name' | 'time'>('time');
@@ -28,9 +29,8 @@ export function EnvVarManager() {
   const [deleteGroupId, setDeleteGroupId] = useState<string | null>(null);
   const [showBatchDelete, setShowBatchDelete] = useState(false);
 
-  // 模板 / 锁链管理对话框
+  // 模板管理对话框
   const [showTemplateManager, setShowTemplateManager] = useState(false);
-  const [showChainManager, setShowChainManager] = useState(false);
 
   // 冲突对话框
   const [conflictState, setConflictState] = useState<{
@@ -44,14 +44,12 @@ export function EnvVarManager() {
   const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
-      const [gs, ts, cs] = await Promise.all([
+      const [gs, ts] = await Promise.all([
         ipc.getAllGroups(),
         ipc.getAllTemplates(),
-        ipc.getAllChains(),
       ]);
       setGroups(gs);
       setTemplates(ts);
-      setChains(cs);
     } catch (err) {
       showToast(`加载失败: ${err}`, 'error');
     } finally {
@@ -94,14 +92,13 @@ export function EnvVarManager() {
     name: string,
     description: string,
     variables: EnvVariable[],
-    chainId: string | null,
   ) => {
     try {
       if (editingGroup) {
-        await ipc.updateGroup(editingGroup.id, name, description, variables, chainId);
+        await ipc.updateGroup(editingGroup.id, name, description, variables);
         showToast(`变量组 "${name}" 已更新`, 'success');
       } else {
-        await ipc.createGroup(name, description, variables, chainId);
+        await ipc.createGroup(name, description, variables);
         showToast(`变量组 "${name}" 已创建`, 'success');
       }
       setShowCreateModal(false);
@@ -121,13 +118,12 @@ export function EnvVarManager() {
         fetchAll();
         return;
       }
-      // 检测冲突
-      const conflicts = await ipc.detectConflicts(g.id);
-      if (conflicts.length > 0) {
-        setConflictState({ group: g, conflicts });
+      // 一次 RPC 同时完成「冲突检测 + 返回 conflicts」
+      const result = await ipc.activateGroup(g.id, false);
+      if (!result.success && result.conflicts.length > 0) {
+        setConflictState({ group: g, conflicts: result.conflicts });
         return;
       }
-      await ipc.activateGroup(g.id);
       showToast(`已激活 "${g.name}"`, 'success');
       fetchAll();
     } catch (err) {
@@ -138,7 +134,15 @@ export function EnvVarManager() {
   const handleConflictOverride = async () => {
     if (!conflictState) return;
     try {
-      await ipc.activateGroup(conflictState.group.id);
+      // force=true 跳过冲突检测，直接写入系统变量
+      const result = await ipc.activateGroup(conflictState.group.id, true);
+      if (!result.success) {
+        const errMsg = result.errors.length > 0
+          ? result.errors.join('; ')
+          : '激活失败';
+        showToast(errMsg, 'error');
+        return;
+      }
       showToast(`已激活 "${conflictState.group.name}"（覆盖已有变量）`, 'success');
       setConflictState(null);
       fetchAll();
@@ -228,17 +232,6 @@ export function EnvVarManager() {
       fetchAll();
     } catch (err) {
       showToast(`导入失败: ${err}`, 'error');
-    }
-  };
-
-  // ---------- 锁链分配 ----------
-  const handleAssignChain = async (groupId: string, chainId: string | null) => {
-    try {
-      await ipc.assignGroupToChain(groupId, chainId);
-      showToast(chainId ? '已加入锁链' : '已移出锁链', 'success');
-      fetchAll();
-    } catch (err) {
-      showToast(`操作失败: ${err}`, 'error');
     }
   };
 
@@ -332,12 +325,6 @@ export function EnvVarManager() {
               <FileText size={14} className="inline mr-1" /> 模板
             </button>
             <button
-              onClick={() => setShowChainManager(true)}
-              className="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-            >
-              <Link2 size={14} className="inline mr-1" /> 锁链
-            </button>
-            <button
               onClick={openCreate}
               className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700"
             >
@@ -378,7 +365,6 @@ export function EnvVarManager() {
       ) : (
         <div className="grid gap-4">
           {filteredGroups.map((group) => {
-            const chain = group.chainId ? chains.find((c) => c.id === group.chainId) : null;
             const isExpanded = expandedId === group.id;
             const isSelected = selectedIds.has(group.id);
             return (
@@ -423,12 +409,6 @@ export function EnvVarManager() {
                           已激活
                         </span>
                       )}
-                      {chain && (
-                        <span className="px-1.5 py-0.5 text-xs bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 rounded">
-                          <Link2 size={10} className="inline mr-1" />
-                          {chain.name}
-                        </span>
-                      )}
                     </div>
                     {group.description && (
                       <p className="text-sm text-gray-500 dark:text-gray-400 ml-6 mt-0.5 truncate">
@@ -438,44 +418,6 @@ export function EnvVarManager() {
                   </button>
 
                   <span className="text-xs text-gray-400">{group.variables.length} 个变量</span>
-
-                  {/* 锁链下拉 */}
-                  <div className="relative group">
-                    <button
-                      className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                      title="分配到锁链"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const dropdown = (e.currentTarget as HTMLElement).nextElementSibling;
-                        dropdown?.classList.toggle('hidden');
-                      }}
-                    >
-                      {chain ? <Link2 size={16} /> : <Unlink size={16} />}
-                    </button>
-                    <div className="hidden absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20 py-1">
-                      <button
-                        onClick={() => handleAssignChain(group.id, null)}
-                        className={`w-full text-left px-3 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                          !chain ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300' : ''
-                        }`}
-                      >
-                        不使用锁链
-                      </button>
-                      {chains.map((c) => (
-                        <button
-                          key={c.id}
-                          onClick={() => handleAssignChain(group.id, c.id)}
-                          className={`w-full text-left px-3 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                            group.chainId === c.id
-                              ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300'
-                              : ''
-                          }`}
-                        >
-                          {c.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
 
                   <button
                     onClick={() => openEdit(group)}
@@ -517,7 +459,6 @@ export function EnvVarManager() {
       {showCreateModal && (
         <EditGroupModal
           initial={editingGroup}
-          chains={chains}
           templates={templates}
           onCancel={() => {
             setShowCreateModal(false);
@@ -559,12 +500,17 @@ export function EnvVarManager() {
           maxWidth="max-w-xl"
         >
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-            激活 "{conflictState.group.name}" 将覆盖以下系统变量（停用后以下变量会被删除，请谨慎操作）：
+            激活 "{conflictState.group.name}" 将覆盖以下变量（系统环境变量或其他已激活变量组中存在同名变量且值不同）：
           </p>
           <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-gray-50 dark:bg-gray-900/30">
             {conflictState.conflicts.map((c, idx) => (
               <div key={idx} className="text-sm font-mono">
-                <div className="text-indigo-600 dark:text-indigo-300">{c.name}</div>
+                <div className="text-indigo-600 dark:text-indigo-300">
+                  {c.name}
+                  <span className="ml-2 text-xs font-sans text-gray-500 dark:text-gray-400">
+                    （来源: {c.sourceGroupName ? `变量组 "${c.sourceGroupName}"` : '系统环境变量'}）
+                  </span>
+                </div>
                 <div className="text-gray-500 dark:text-gray-400 pl-4 mt-0.5">
                   当前: <span className="text-red-500">{c.existingValue || '(空)'}</span>
                 </div>
@@ -597,17 +543,6 @@ export function EnvVarManager() {
           templates={templates}
           onClose={() => {
             setShowTemplateManager(false);
-            fetchAll();
-          }}
-        />
-      )}
-
-      {/* 锁链管理 */}
-      {showChainManager && (
-        <ChainManager
-          chains={chains}
-          onClose={() => {
-            setShowChainManager(false);
             fetchAll();
           }}
         />
@@ -661,17 +596,15 @@ function VariableRow({
 // ---------- 子组件：编辑 / 创建组对话框 ----------
 function EditGroupModal({
   initial,
-  chains,
   templates,
   onCancel,
   onSave,
   onAfterTemplatesChange,
 }: {
   initial: EnvGroup | null;
-  chains: Chain[];
   templates: Template[];
   onCancel: () => void;
-  onSave: (name: string, description: string, variables: EnvVariable[], chainId: string | null) => void;
+  onSave: (name: string, description: string, variables: EnvVariable[]) => void;
   onAfterTemplatesChange: () => void;
 }) {
   const [name, setName] = useState(initial?.name ?? '');
@@ -679,7 +612,6 @@ function EditGroupModal({
   const [variables, setVariables] = useState<EnvVariable[]>(
     initial?.variables ?? [{ name: '', value: '', isHidden: false }],
   );
-  const [selectedChainId, setSelectedChainId] = useState<string | null>(initial?.chainId ?? null);
   const [showCreateTemplate, setShowCreateTemplate] = useState(false);
   const [newTemplateName, setNewTemplateName] = useState('');
   const { showToast } = useToast();
@@ -754,25 +686,6 @@ function EditGroupModal({
             placeholder="可选"
             className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">锁链（可选）</label>
-          <select
-            value={selectedChainId ?? ''}
-            onChange={(e) => setSelectedChainId(e.target.value === '' ? null : e.target.value)}
-            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            <option value="">不使用锁链</option>
-            {chains.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-          <p className="text-xs text-gray-500 mt-1">
-            同一锁链下仅能激活一个变量组，激活新组会自动停用其他组。
-          </p>
         </div>
 
         <div>
@@ -872,7 +785,7 @@ function EditGroupModal({
           </button>
           <button
             disabled={!canSave}
-            onClick={() => onSave(name.trim(), description.trim(), variables, selectedChainId)}
+            onClick={() => onSave(name.trim(), description.trim(), variables)}
             className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             保存
@@ -1030,125 +943,4 @@ function TemplateManager({ templates, onClose }: { templates: Template[]; onClos
   );
 }
 
-// ---------- 子组件：锁链管理 ----------
-function ChainManager({ chains, onClose }: { chains: Chain[]; onClose: () => void }) {
-  const [local, setLocal] = useState<Chain[]>(chains);
-  const [editing, setEditing] = useState<Chain | null>(null);
-  const [name, setName] = useState('');
-  const { showToast } = useToast();
-
-  const startCreate = () => {
-    setEditing(null);
-    setName('');
-  };
-
-  const startEdit = (c: Chain) => {
-    setEditing(c);
-    setName(c.name);
-  };
-
-  const handleSave = async () => {
-    if (!name.trim()) {
-      showToast('请输入锁链名称', 'warning');
-      return;
-    }
-    try {
-      if (editing) {
-        await ipc.updateChain(editing.id, name.trim());
-        showToast('锁链已更新', 'success');
-      } else {
-        await ipc.createChain(name.trim());
-        showToast('锁链已创建', 'success');
-      }
-      setLocal(await ipc.getAllChains());
-      setEditing(null);
-      setName('');
-    } catch (err) {
-      showToast(`保存失败: ${err}`, 'error');
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      await ipc.deleteChain(id);
-      showToast('锁链已删除（相关组已自动移出锁链）', 'success');
-      setLocal(await ipc.getAllChains());
-    } catch (err) {
-      showToast(`删除失败: ${err}`, 'error');
-    }
-  };
-
-  return (
-    <Modal isOpen={true} onClose={onClose} title="锁链管理（互斥分组）" maxWidth="max-w-xl">
-      <div className="space-y-4">
-        <p className="text-sm text-gray-600 dark:text-gray-300">
-          同一锁链下的变量组互斥，激活一个会自动停用其他组。
-        </p>
-        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
-          <label className="block text-sm font-medium mb-1">{editing ? '编辑锁链' : '新建锁链'}</label>
-          <div className="flex items-center gap-2">
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="锁链名称"
-              className="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            {editing && (
-              <button
-                onClick={startCreate}
-                className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
-              >
-                新建
-              </button>
-            )}
-            <button
-              onClick={handleSave}
-              className="px-3 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
-            >
-              {editing ? '更新' : '创建'}
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">现有锁链 ({local.length})</label>
-          {local.length === 0 ? (
-            <p className="text-sm text-gray-400 py-4 text-center">暂无锁链</p>
-          ) : (
-            <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-              {local.map((c) => (
-                <div
-                  key={c.id}
-                  className="flex items-center gap-3 p-2 bg-gray-50 dark:bg-gray-900/30 rounded-lg border border-gray-200 dark:border-gray-700"
-                >
-                  <div className="flex-1 text-sm font-medium">{c.name}</div>
-                  <button
-                    onClick={() => startEdit(c)}
-                    className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <Edit3 size={14} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(c.id)}
-                    className="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-red-500"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="flex justify-end pt-3 border-t border-gray-200 dark:border-gray-700">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-          >
-            完成
-          </button>
-        </div>
-      </div>
-    </Modal>
-  );
-}
+// ---------- 子组件：模板管理 ----------

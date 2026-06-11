@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS env_groups (
     description TEXT NOT NULL DEFAULT '',
     variables TEXT NOT NULL DEFAULT '[]',
     is_active INTEGER NOT NULL DEFAULT 0,
-    chain_id TEXT,
     created_at INTEGER NOT NULL,
     updated_at INTEGER NOT NULL
 );
@@ -34,7 +33,6 @@ CREATE TABLE IF NOT EXISTS backups (
     created_at INTEGER NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_env_groups_chain ON env_groups(chain_id);
 CREATE INDEX IF NOT EXISTS idx_env_groups_active ON env_groups(is_active);
 CREATE INDEX IF NOT EXISTS idx_trash_history_type ON trash_history(target_type);
 CREATE INDEX IF NOT EXISTS idx_trash_history_timestamp ON trash_history(timestamp);

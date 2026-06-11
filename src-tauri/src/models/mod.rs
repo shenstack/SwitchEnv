@@ -26,8 +26,6 @@ pub struct EnvGroup {
     pub variables: Vec<EnvVariable>,
     #[serde(rename = "isActive")]
     pub is_active: bool,
-    #[serde(rename = "chainId")]
-    pub chain_id: Option<String>,
     #[serde(rename = "createdAt")]
     pub created_at: i64,
     #[serde(rename = "updatedAt")]
@@ -39,8 +37,6 @@ pub struct CreateGroupInput {
     pub name: String,
     pub description: String,
     pub variables: Vec<EnvVariable>,
-    #[serde(rename = "chainId")]
-    pub chain_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -48,18 +44,22 @@ pub struct UpdateGroupInput {
     pub name: Option<String>,
     pub description: Option<String>,
     pub variables: Option<Vec<EnvVariable>>,
-    #[serde(rename = "chainId")]
-    pub chain_id: Option<Option<String>>,
 }
 
+/// 激活变量组的结果：
+/// - conflicts：与系统变量或其他已激活组存在冲突时填充，
+///   success=false 时表示有冲突尚未被强制覆盖。
+/// - errors：写入系统时发生的不可恢复错误。
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ActivationResult {
     pub success: bool,
     pub conflicts: Vec<EnvVarConflict>,
-    pub deactivated_groups: Vec<String>,
     pub errors: Vec<String>,
 }
 
+/// 冲突条目：记录与系统注册表或其他已激活变量组的同名变量差异。
+/// source="system" 表示来自用户环境变量注册表；
+/// 其他 source 为具体变量组 id，此时 source_group_name 会附带组名。
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EnvVarConflict {
     pub name: String,
@@ -67,6 +67,9 @@ pub struct EnvVarConflict {
     pub existing_value: String,
     #[serde(rename = "newValue")]
     pub new_value: String,
+    pub source: String,
+    #[serde(rename = "sourceGroupName")]
+    pub source_group_name: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -169,18 +172,9 @@ pub struct Template {
     pub updated_at: i64,
 }
 
-/// 锁链：互斥组集合，同一锁链下同时只能激活一个变量组。
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Chain {
-    pub id: String,
-    pub name: String,
-    #[serde(rename = "createdAt")]
-    pub created_at: i64,
-    #[serde(rename = "updatedAt")]
-    pub updated_at: i64,
-}
-
 /// 变量组导入导出的 JSON 载体。
+/// 向后兼容：旧文件中若存在 chains / groups[i].chainId，
+/// 在反序列化时会被忽略（借助 serde 未知字段默认丢弃策略 + deny_unknown_fields=false）。
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GroupExportPayload {
     #[serde(rename = "type")]
@@ -188,14 +182,7 @@ pub struct GroupExportPayload {
     pub version: i32,
     #[serde(rename = "exportedAt")]
     pub exported_at: i64,
-    pub chains: Vec<ChainExport>,
     pub groups: Vec<GroupExport>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ChainExport {
-    pub id: Option<String>,
-    pub name: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -203,8 +190,6 @@ pub struct GroupExport {
     pub name: String,
     pub description: String,
     pub variables: Vec<EnvVariable>,
-    #[serde(rename = "chainId")]
-    pub chain_id: Option<String>,
     #[serde(rename = "createdAt")]
     pub created_at: Option<i64>,
 }
