@@ -559,7 +559,7 @@ export function EnvVarManager() {
           maxWidth="max-w-xl"
         >
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-            激活 "{conflictState.group.name}" 将覆盖以下系统变量：
+            激活 "{conflictState.group.name}" 将覆盖以下系统变量（停用后以下变量会被删除，请谨慎操作）：
           </p>
           <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-gray-50 dark:bg-gray-900/30">
             {conflictState.conflicts.map((c, idx) => (
