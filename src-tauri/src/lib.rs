@@ -40,6 +40,7 @@ pub fn run() {
             commands::env_commands::refresh_environment,
             commands::env_commands::open_system_settings,
             commands::env_commands::get_shell_config_info,
+            commands::env_commands::export_env_vars,
             commands::group_commands::get_all_groups,
             commands::group_commands::create_group,
             commands::group_commands::update_group,

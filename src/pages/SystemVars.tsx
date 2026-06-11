@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { RefreshCw, Copy, ExternalLink } from 'lucide-react';
+import { RefreshCw, Copy, ExternalLink, Download } from 'lucide-react';
+import { save as saveDialog } from '@tauri-apps/plugin-dialog';
 import * as ipc from '../services/ipc';
 import { useToast } from '../components/ToastProvider';
 import { SearchBar } from '../components/SearchBar';
@@ -42,7 +43,32 @@ export function SystemVars() {
     }
   };
 
-  const renderVarList = (vars: EnvVar[], title: string) => {
+  /**
+   * 导出用户级或系统级环境变量为 key=value 格式的 txt 文件。
+   * 调用文件保存对话框选择保存位置，再调用后端命令写入文件。
+   */
+  const handleExport = async (isSystem: boolean) => {
+    try {
+      const defaultName = isSystem ? 'system-env-vars.txt' : 'user-env-vars.txt';
+      const filePath = await saveDialog({
+        title: isSystem ? '导出系统级环境变量' : '导出用户级环境变量',
+        defaultPath: defaultName,
+        filters: [{ name: '文本文件', extensions: ['txt'] }],
+      });
+      if (!filePath) return;
+
+      // 后端写入文件，返回绝对路径
+      const result = await ipc.exportEnvVars(isSystem, filePath);
+      showToast(`已导出到: ${result}`, 'success');
+    } catch (err) {
+      showToast(`导出失败: ${err}`, 'error');
+    }
+  };
+
+  /**
+   * 渲染单个变量列表块，附带标题和可选的导出按钮。
+   */
+  const renderVarList = (vars: EnvVar[], title: string, isSystem: boolean) => {
     const filtered = vars.filter(v =>
       v.name.toLowerCase().includes(search.toLowerCase()) ||
       v.value.toLowerCase().includes(search.toLowerCase())
@@ -50,9 +76,19 @@ export function SystemVars() {
 
     return (
       <div className="mb-8">
-        <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-          {title} ({filtered.length})
-        </h3>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            {title} ({filtered.length})
+          </h3>
+          <button
+            onClick={() => handleExport(isSystem)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+            title={isSystem ? '导出系统级变量' : '导出用户级变量'}
+          >
+            <Download size={14} />
+            导出
+          </button>
+        </div>
         {filtered.length === 0 ? (
           <p className="text-sm text-gray-400">无匹配变量</p>
         ) : (
@@ -100,8 +136,8 @@ export function SystemVars() {
         </div>
       )}
 
-      {renderVarList(userVars, '用户级变量')}
-      {renderVarList(systemVars, '系统级变量')}
+      {renderVarList(userVars, '用户级变量', false)}
+      {renderVarList(systemVars, '系统级变量', true)}
     </div>
   );
 }

@@ -40,6 +40,19 @@ export async function getShellConfigInfo(): Promise<ShellConfigInfo> {
   return invoke('get_shell_config_info');
 }
 
+/**
+ * 导出用户级或系统级环境变量为 key=value 格式文本。
+ * isSystem=false 导出用户级变量；isSystem=true 导出系统级变量。
+ * savePath 提供时写入文件并返回绝对路径；
+ * savePath 缺省时直接返回文本内容。
+ */
+export async function exportEnvVars(
+  isSystem: boolean,
+  savePath?: string,
+): Promise<string> {
+  return invoke('export_env_vars', { isSystem, savePath });
+}
+
 // ===== 变量组 =====
 export async function getAllGroups(): Promise<EnvGroup[]> {
   return invoke('get_all_groups');
