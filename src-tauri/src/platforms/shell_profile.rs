@@ -1,8 +1,8 @@
 use crate::models::ShellConfigInfo;
 use std::path::PathBuf;
 
-const MARKER_START: &str = "# === Env Assistant START ===";
-const MARKER_END: &str = "# === Env Assistant END ===";
+const MARKER_START: &str = "# === Switch Env START ===";
+const MARKER_END: &str = "# === Switch Env END ===";
 
 #[derive(Debug, Clone)]
 enum ShellType {

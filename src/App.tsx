@@ -26,14 +26,6 @@ export default function App() {
         {/* Header */}
         <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="flex items-center justify-between h-14">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">E</span>
-                </div>
-                <h1 className="text-lg font-semibold">Env Assistant</h1>
-              </div>
-            </div>
             {/* Tab Bar */}
             <div className="flex gap-1 -mb-px">
               {tabs.map((tab) => (
