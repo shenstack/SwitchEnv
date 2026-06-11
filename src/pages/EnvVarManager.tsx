@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Power, PowerOff, Edit3, Trash2, Copy, ChevronDown, ChevronRight, RefreshCw, Download, Upload, FileText, FileJson, Eye, EyeOff, X, CheckSquare, Square } from 'lucide-react';
+import { Plus, Power, PowerOff, Edit3, Trash2, Copy, ChevronDown, ChevronRight, RefreshCw, Download, Upload, FileText, FileJson, Eye, EyeOff, CheckSquare, Square } from 'lucide-react';
 import { open as openDialog, save as saveDialog } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
 import * as ipc from '../services/ipc';
@@ -20,7 +20,7 @@ export function EnvVarManager() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [sortMode, setSortMode] = useState<'name' | 'time'>('time');
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   // 对话框状态
@@ -268,6 +268,7 @@ export function EnvVarManager() {
             className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
+        {/* 批量 / 管理按钮 */}
         <button
           onClick={() => setSortMode(sortMode === 'name' ? 'time' : 'name')}
           className="flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -282,58 +283,42 @@ export function EnvVarManager() {
         >
           <RefreshCw size={18} />
         </button>
+        <button
+          onClick={handleExport}
+          disabled={selectedIds.size === 0}
+          className={`flex items-center gap-1.5 px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg ${selectedIds.size > 0 ? 'hover:bg-gray-50 dark:hover:bg-gray-700' : 'opacity-40 cursor-not-allowed'}`}
+          title={selectedIds.size > 0 ? '导出已选的变量组' : '请先勾选要导出的变量组'}
+        >
+          <Download size={14} /> 导出
+        </button>
+        <button
+          onClick={handleImportClick}
+          className="flex items-center gap-1.5 px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+        >
+          <Upload size={14} /> 导入
+        </button>
+        <button
+          onClick={() => setShowTemplateManager(true)}
+          className="flex items-center gap-1.5 px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+        >
+          <FileText size={14} /> 模板
+        </button>
 
-        {/* 批量 / 管理按钮 */}
+        {/* 根据是否有勾选，在末尾切换：新建分组 / 批量删除 */}
         {selectedIds.size > 0 ? (
-          <>
-            <button
-              onClick={() => setSelectedIds(new Set())}
-              className="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-            >
-              <X size={14} className="inline mr-1" /> 取消选择 ({selectedIds.size})
-            </button>
-            <button
-              onClick={handleExport}
-              className="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-            >
-              <Download size={14} className="inline mr-1" /> 导出选中
-            </button>
-            <button
-              onClick={() => setShowBatchDelete(true)}
-              className="px-3 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700"
-            >
-              <Trash2 size={14} className="inline mr-1" /> 批量删除
-            </button>
-          </>
+          <button
+            onClick={() => setShowBatchDelete(true)}
+            className="flex items-center gap-1.5 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700"
+          >
+            <Trash2 size={16} /> 批量删除
+          </button>
         ) : (
-          <>
-            <button
-              onClick={handleExport}
-              disabled
-              className="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg opacity-40 cursor-not-allowed"
-              title="请先勾选要导出的变量组"
-            >
-              <Download size={14} className="inline mr-1" /> 导出
-            </button>
-            <button
-              onClick={handleImportClick}
-              className="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-            >
-              <Upload size={14} className="inline mr-1" /> 导入
-            </button>
-            <button
-              onClick={() => setShowTemplateManager(true)}
-              className="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-            >
-              <FileText size={14} className="inline mr-1" /> 模板
-            </button>
-            <button
-              onClick={openCreate}
-              className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700"
-            >
-              <Plus size={16} /> 新建变量组
-            </button>
-          </>
+          <button
+            onClick={openCreate}
+            className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700"
+          >
+            <Plus size={16} /> 新建分组
+          </button>
         )}
       </div>
 
@@ -344,15 +329,11 @@ export function EnvVarManager() {
             onClick={toggleSelectAll}
             className="flex items-center gap-1.5 px-2 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
           >
-            {filteredGroups.length > 0 && filteredGroups.every((g) => selectedIds.has(g.id)) ? (
-              <>
-                <CheckSquare size={14} /> 取消全选
-              </>
+            {filteredGroups.every((g) => selectedIds.has(g.id)) ? (
+              <CheckSquare size={14} />
             ) : (
-              <>
-                <Square size={14} /> 全选
-              </>
-            )}
+              <Square size={14} />
+            )} 全选
           </button>
           {selectedIds.size > 0 && (
             <span className="text-gray-500">已选 {selectedIds.size} / {filteredGroups.length}</span>
@@ -363,12 +344,12 @@ export function EnvVarManager() {
       {/* Group List */}
       {filteredGroups.length === 0 ? (
         <div className="text-center py-20 text-gray-400">
-          {search ? '没有匹配的变量组' : '暂无变量组，点击"新建变量组"开始'}
+          {search ? '没有匹配的变量组' : '暂无变量组，点击"新建分组"开始'}
         </div>
       ) : (
         <div className="grid gap-4">
           {filteredGroups.map((group) => {
-            const isExpanded = expandedId === group.id;
+            const isExpanded = expandedIds.has(group.id);
             const isSelected = selectedIds.has(group.id);
             return (
               <div
@@ -401,7 +382,14 @@ export function EnvVarManager() {
                   </button>
 
                   <button
-                    onClick={() => setExpandedId(isExpanded ? null : group.id)}
+                    onClick={() =>
+                      setExpandedIds((prev) => {
+                        const next = new Set(prev);
+                        if (next.has(group.id)) next.delete(group.id);
+                        else next.add(group.id);
+                        return next;
+                      })
+                    }
                     className="flex-1 text-left min-w-0"
                   >
                     <div className="flex items-center gap-2 flex-wrap">
@@ -661,13 +649,17 @@ function EditGroupModal({
     }
   };
 
-  const canSave = name.trim().length > 0;
+  // 仅保留 name 与 value 都非空的变量，避免写入无效条目
+  const validVariables = variables.filter(
+    (v) => v.name.trim().length > 0 && v.value.trim().length > 0,
+  );
+  const canSave = name.trim().length > 0 && validVariables.length > 0;
 
   return (
     <Modal
       isOpen={true}
       onClose={onCancel}
-      title={initial ? `编辑变量组：${initial.name}` : '新建变量组'}
+      title={initial ? `编辑变量组：${initial.name}` : '新建分组'}
       maxWidth="max-w-2xl"
     >
       <div className="space-y-4">
@@ -746,21 +738,32 @@ function EditGroupModal({
           )}
 
           <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-            {variables.map((v, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <input
-                  value={v.name}
-                  onChange={(e) => updateVar(idx, 'name', e.target.value)}
-                  placeholder="变量名"
-                  className="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-                <span className="text-gray-300">=</span>
-                <input
-                  value={v.value}
-                  onChange={(e) => updateVar(idx, 'value', e.target.value)}
-                  placeholder="变量值"
-                  className="flex-[2] px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
+            {variables.map((v, idx) => {
+              const nameEmpty = v.name.trim().length === 0;
+              const valueEmpty = v.value.trim().length === 0;
+              return (
+                <div key={idx} className="flex items-center gap-2">
+                  <input
+                    value={v.name}
+                    onChange={(e) => updateVar(idx, 'name', e.target.value)}
+                    placeholder="变量名"
+                    className={`flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 border rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                      nameEmpty
+                        ? 'border-red-400 dark:border-red-500'
+                        : 'border-gray-200 dark:border-gray-600'
+                    }`}
+                  />
+                  <span className="text-gray-300">=</span>
+                  <input
+                    value={v.value}
+                    onChange={(e) => updateVar(idx, 'value', e.target.value)}
+                    placeholder="变量值"
+                    className={`flex-[2] px-3 py-2 bg-gray-100 dark:bg-gray-700 border rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                      valueEmpty
+                        ? 'border-red-400 dark:border-red-500'
+                        : 'border-gray-200 dark:border-gray-600'
+                    }`}
+                  />
                 <button
                   onClick={() => updateVar(idx, 'isHidden', !v.isHidden)}
                   className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
@@ -775,7 +778,8 @@ function EditGroupModal({
                   <Trash2 size={14} />
                 </button>
               </div>
-            ))}
+            );
+            })}
           </div>
         </div>
 
@@ -788,7 +792,17 @@ function EditGroupModal({
           </button>
           <button
             disabled={!canSave}
-            onClick={() => onSave(name.trim(), description.trim(), variables)}
+            onClick={() =>
+              onSave(
+                name.trim(),
+                description.trim(),
+                validVariables.map((v) => ({
+                  ...v,
+                  name: v.name.trim(),
+                  value: v.value.trim(),
+                })),
+              )
+            }
             className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             保存

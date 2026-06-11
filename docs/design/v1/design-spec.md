@@ -1095,7 +1095,7 @@ App
 - `loading: boolean`：加载状态（显示"加载中…"骨架）
 - `search: string`：搜索关键词，对 name/description 做 `toLowerCase().includes()` 过滤
 - `expandedId: string | null`：展开某组显示变量列表
-- `showCreateModal: boolean`：控制"新建变量组"模态框
+- `showCreateModal: boolean`：控制"新建分组"模态框
 - `deleteId: string | null`：控制"确认删除"对话框
 
 **关键交互**：
