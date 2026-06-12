@@ -1,5 +1,5 @@
 use crate::error::{AppError, AppResult};
-use tauri::{AppHandle, Manager};
+use tauri::AppHandle;
 use tauri_plugin_clipboard_manager::ClipboardExt;
 
 #[tauri::command]

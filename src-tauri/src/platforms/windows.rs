@@ -1,3 +1,5 @@
+#![cfg(windows)]
+
 use crate::models::{EnvVar, ShellConfigInfo};
 use crate::platforms::{PlatformError, PlatformInfo, PlatformService};
 use async_trait::async_trait;
@@ -21,10 +23,10 @@ const SMTO_ABORTIFHUNG: u32 = 0x0002;
 /// 单次广播的超时时间（毫秒），5s 足以覆盖绝大多数场景
 const BROADCAST_TIMEOUT_MS: u32 = 5000;
 
-/// 通过 Win32 FFI 直接调用 SendMessageTimeoutW，避免每次 spawn PowerShell + C# Add-Type
-/// 编译消耗 ~300-1500ms。
+// 通过 Win32 FFI 直接调用 SendMessageTimeoutW，避免每次 spawn PowerShell + C# Add-Type，
+// 编译消耗约 300-1500ms。
 extern "system" {
-    /// 发送消息到顶层窗口，并设置超时，防止因接收方挂起而阻塞。
+    // 发送消息到顶层窗口，并设置超时，防止因接收方挂起而阻塞。
     fn SendMessageTimeoutW(
         hWnd: usize,
         Msg: u32,
