@@ -22,12 +22,49 @@ pub fn run() {
         .setup(|app| {
             let app_dir = app.path().app_data_dir().expect("failed to get app data dir");
             std::fs::create_dir_all(&app_dir).expect("failed to create app data dir");
+
+            let logs_dir = app_dir.join("logs");
+            std::fs::create_dir_all(&logs_dir).expect("failed to create logs dir");
+            let log_path = logs_dir.join(format!("{}.log", chrono::Local::now().format("%Y-%m-%d")));
+            let dispatch = fern::Dispatch::new()
+                .format(|out, message, record| {
+                    out.finish(format_args!(
+                        "[{}] [{}] {}",
+                        chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"),
+                        record.level(),
+                        message,
+                    ))
+                })
+                .level(log::LevelFilter::Debug);
+
+            let file_dispatch = fern::Dispatch::new()
+                .level(log::LevelFilter::Info)
+                .chain(
+                    std::fs::OpenOptions::new()
+                        .append(true)
+                        .create(true)
+                        .open(&log_path)
+                        .expect("failed to open performance log file"),
+                );
+
+            let stdout_dispatch = fern::Dispatch::new()
+                .level(log::LevelFilter::Debug)
+                .chain(std::io::stdout());
+
+            dispatch
+                .chain(file_dispatch)
+                .chain(stdout_dispatch)
+                .apply()
+                .expect("failed to initialize logger");
+
+            log::info!("[setup] 日志初始化完成, 路径={}", log_path.display());
+
             let db_path = app_dir.join("SwitchEnv.db");
             let mut conn = rusqlite::Connection::open(&db_path).expect("failed to open database");
             db::run_migrations(&mut conn).expect("failed to run migrations");
 
             let platform: Arc<dyn PlatformService> = Arc::from(platforms::create_platform_service());
-            let state = AppState::new(conn, platform);
+            let state = AppState::new(conn, platform, log_path);
             app.manage(state);
             Ok(())
         })

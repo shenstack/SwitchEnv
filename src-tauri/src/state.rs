@@ -15,14 +15,20 @@ use std::sync::Mutex;
 pub struct AppState {
     db: Mutex<Connection>,
     pub platform: Arc<dyn PlatformService>,
+    pub log_path: std::path::PathBuf,
 }
 
 impl AppState {
     /// 构造一个已完成初始化的状态（在 tauri setup 阶段调用一次）。
-    pub fn new(conn: Connection, platform: Arc<dyn PlatformService>) -> Self {
+    pub fn new(
+        conn: Connection,
+        platform: Arc<dyn PlatformService>,
+        log_path: std::path::PathBuf,
+    ) -> Self {
         Self {
             db: Mutex::new(conn),
             platform,
+            log_path,
         }
     }
 
