@@ -605,6 +605,7 @@ function EditGroupModal({
   );
   const [showCreateTemplate, setShowCreateTemplate] = useState(false);
   const [newTemplateName, setNewTemplateName] = useState('');
+  const [showConfirmEmpty, setShowConfirmEmpty] = useState(false);
   const { showToast } = useToast();
 
   const addVar = () => setVariables((v) => [...v, { name: '', value: '', isHidden: false }]);
@@ -654,14 +655,40 @@ function EditGroupModal({
     (v) => v.name.trim().length > 0 && v.value.trim().length > 0,
   );
   const canSave = name.trim().length > 0 && validVariables.length > 0;
+  // 待填写的行数（二次确认时展示给用户）
+  const emptyCount = variables.length - validVariables.length;
+
+  // 真正执行保存：只把合法（name、value 非空）变量写进后端
+  const doSave = () => {
+    onSave(
+      name.trim(),
+      description.trim(),
+      validVariables.map((v) => ({
+        ...v,
+        name: v.name.trim(),
+        value: v.value.trim(),
+      })),
+    );
+  };
+
+  // 保存按钮点击：没有待填写 → 直接保存；有待填写 → 弹二次确认
+  const onSaveClick = () => {
+    if (!canSave) return;
+    if (emptyCount === 0) {
+      doSave();
+    } else {
+      setShowConfirmEmpty(true);
+    }
+  };
 
   return (
-    <Modal
-      isOpen={true}
-      onClose={onCancel}
-      title={initial ? `编辑变量组：${initial.name}` : '新建分组'}
-      maxWidth="max-w-2xl"
-    >
+    <>
+      <Modal
+        isOpen={true}
+        onClose={onCancel}
+        title={initial ? `编辑变量组：${initial.name}` : '新建分组'}
+        maxWidth="max-w-2xl"
+      >
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">名称</label>
@@ -792,17 +819,7 @@ function EditGroupModal({
           </button>
           <button
             disabled={!canSave}
-            onClick={() =>
-              onSave(
-                name.trim(),
-                description.trim(),
-                validVariables.map((v) => ({
-                  ...v,
-                  name: v.name.trim(),
-                  value: v.value.trim(),
-                })),
-              )
-            }
+            onClick={onSaveClick}
             className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             保存
@@ -810,6 +827,36 @@ function EditGroupModal({
         </div>
       </div>
     </Modal>
+
+    {/* 二次确认：存在待填写行时提示用户空值不会被保存 */}
+    <Modal isOpen={showConfirmEmpty} onClose={() => setShowConfirmEmpty(false)} title="保存前确认" maxWidth="max-w-sm">
+      <div className="space-y-3">
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          当前有 <span className="font-semibold text-indigo-600 dark:text-indigo-400">{emptyCount}</span> 行变量未填写完整，这些空值行将被忽略，不会保存。
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          已标记为红色边框的行即为待填项；确认后将保存 {validVariables.length} 行完整变量。
+        </p>
+        <div className="flex justify-end gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+          <button
+            onClick={() => setShowConfirmEmpty(false)}
+            className="px-4 py-2 text-sm font-medium bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600"
+          >
+            取消
+          </button>
+          <button
+            onClick={() => {
+              setShowConfirmEmpty(false);
+              doSave();
+            }}
+            className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+          >
+            确认保存
+          </button>
+        </div>
+      </div>
+    </Modal>
+    </>
   );
 }
 
