@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { EnvVarManager } from './pages/EnvVarManager';
+import { UserVars } from './pages/UserVars';
 import { SystemVars } from './pages/SystemVars';
 import { HistoryPage } from './pages/HistoryPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { ToastProvider } from './components/ToastProvider';
 import { useTheme } from './hooks/useTheme';
-import { Layers, Monitor, History, Settings } from 'lucide-react';
+import { Layers, User, Monitor, History, Settings } from 'lucide-react';
 
-type Tab = 'groups' | 'system-vars' | 'history' | 'settings';
+type Tab = 'groups' | 'user-vars' | 'system-vars' | 'history' | 'settings';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('groups');
@@ -15,6 +16,7 @@ export default function App() {
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: 'groups', label: '变量组', icon: <Layers size={18} /> },
+    { id: 'user-vars', label: '用户变量', icon: <User size={18} /> },
     { id: 'system-vars', label: '系统变量', icon: <Monitor size={18} /> },
     { id: 'history', label: '历史记录', icon: <History size={18} /> },
     { id: 'settings', label: '设置', icon: <Settings size={18} /> },
@@ -49,6 +51,7 @@ export default function App() {
         {/* Content */}
         <main className="max-w-7xl mx-auto px-4 py-6">
           {activeTab === 'groups' && <EnvVarManager />}
+          {activeTab === 'user-vars' && <UserVars />}
           {activeTab === 'system-vars' && <SystemVars />}
           {activeTab === 'history' && <HistoryPage />}
           {activeTab === 'settings' && <SettingsPage />}
