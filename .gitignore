@@ -44,4 +44,10 @@ build/
 *.log.gz
 /node_modules
 
-/docs/Env_variable_assistant_utools
+#/docs/Env_variable_assistant_utools
+
+### Tauri / Vite ###
+/dist/
+/src-tauri/target/
+/src-tauri/gen/schemas/*.backup.json
+**/.DS_Store

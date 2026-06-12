@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Plus, Power, PowerOff, Edit3, Trash2, Copy, ChevronDown, ChevronRight, RefreshCw, Download, Upload, FileText, FileJson, Eye, EyeOff, CheckSquare, Square } from 'lucide-react';
 import { open as openDialog, save as saveDialog } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
@@ -6,7 +6,8 @@ import * as ipc from '../services/ipc';
 import { useToast } from '../components/ToastProvider';
 import { Modal } from '../components/Modal';
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import type { EnvGroup, EnvVariable, Template, EnvVarConflict } from '../types';
+import { ImportConflictDialog } from '../components/ImportConflictDialog';
+import type { EnvGroup, EnvVariable, Template, EnvVarConflict, ImportPreviewResult, ShellConfigInfo } from '../types';
 
 /**
  * 环境变量组管理主视图。
@@ -19,7 +20,6 @@ export function EnvVarManager() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [sortMode, setSortMode] = useState<'name' | 'time'>('time');
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
@@ -38,18 +38,28 @@ export function EnvVarManager() {
     conflicts: EnvVarConflict[];
   } | null>(null);
 
+  // 导入对话框
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [importPreview, setImportPreview] = useState<ImportPreviewResult | null>(null);
+  const [pendingImportJson, setPendingImportJson] = useState<string | null>(null);
+
+  // Shell 配置文件信息（仅 macOS/Linux 有意义）
+  const [shellConfigInfo, setShellConfigInfo] = useState<ShellConfigInfo | null>(null);
+
   const { showToast } = useToast();
 
   // ---------- 数据加载 ----------
   const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
-      const [gs, ts] = await Promise.all([
+      const [gs, ts, sh] = await Promise.all([
         ipc.getAllGroups(),
         ipc.getAllTemplates(),
+        ipc.getShellConfigInfo().catch(() => null),
       ]);
       setGroups(gs);
       setTemplates(ts);
+      setShellConfigInfo(sh);
     } catch (err) {
       showToast(`加载失败: ${err}`, 'error');
     } finally {
@@ -62,20 +72,19 @@ export function EnvVarManager() {
   }, [fetchAll]);
 
   // ---------- 搜索与排序 ----------
-  const filteredGroups = groups
-    .filter((g) => {
-      if (!search.trim()) return true;
-      const q = search.toLowerCase();
-      return (
-        g.name.toLowerCase().includes(q) ||
-        g.description.toLowerCase().includes(q) ||
-        g.variables.some((v) => v.name.toLowerCase().includes(q) || v.value.toLowerCase().includes(q))
-      );
-    })
-    .sort((a, b) => {
-      if (sortMode === 'name') return a.name.localeCompare(b.name, 'zh-Hans-CN');
-      return b.updatedAt - a.updatedAt;
-    });
+  const filteredGroups = useMemo(() => {
+    return groups
+      .filter((g) => {
+        if (!search.trim()) return true;
+        const q = search.toLowerCase();
+        return (
+          g.name.toLowerCase().includes(q) ||
+          g.description.toLowerCase().includes(q) ||
+          g.variables.some((v) => v.name.toLowerCase().includes(q) || v.value.toLowerCase().includes(q))
+        );
+      })
+      .sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
+  }, [groups, search]);
 
   // ---------- 创建 / 编辑 ----------
   const openCreate = () => {
@@ -228,12 +237,57 @@ export function EnvVarManager() {
       const filePath = Array.isArray(selected) ? selected[0] : selected;
       if (!filePath) return;
       const text = await readTextFile(filePath);
-      const count = await ipc.importGroups(text);
-      showToast(`成功导入 ${count} 个变量组`, 'success');
+
+      const preview = await ipc.previewImportGroups(text);
+
+      if (preview.conflictGroups.length === 0) {
+        // 无冲突 → 直接执行导入
+        const count = await ipc.executeImportGroups(text, [], [], []);
+        showToast(`成功导入 ${count} 个变量组`, 'success');
+        fetchAll();
+      } else {
+        // 有冲突 → 弹窗让用户决策
+        setPendingImportJson(text);
+        setImportPreview(preview);
+        setShowImportDialog(true);
+      }
+    } catch (err) {
+      showToast(`导入失败: ${err}`, 'error');
+    }
+  };
+
+  const handleImportConfirm = async (
+    overwriteNames: string[],
+    mergeNames: string[],
+    ignoreNames: string[],
+  ) => {
+    if (!pendingImportJson) return;
+    try {
+      const count = await ipc.executeImportGroups(
+        pendingImportJson,
+        overwriteNames,
+        mergeNames,
+        ignoreNames,
+      );
+      setShowImportDialog(false);
+      setImportPreview(null);
+      setPendingImportJson(null);
+      const parts: string[] = [];
+      if (overwriteNames.length > 0) parts.push(`覆盖 ${overwriteNames.length} 个`);
+      if (mergeNames.length > 0) parts.push(`合并 ${mergeNames.length} 个`);
+      if (ignoreNames.length > 0) parts.push(`忽略 ${ignoreNames.length} 个`);
+      const detail = parts.length > 0 ? `（${parts.join('，')}）` : '';
+      showToast(`成功导入 ${count} 个变量组${detail}`, 'success');
       fetchAll();
     } catch (err) {
       showToast(`导入失败: ${err}`, 'error');
     }
+  };
+
+  const handleImportCancel = () => {
+    setShowImportDialog(false);
+    setImportPreview(null);
+    setPendingImportJson(null);
   };
 
   // ---------- 复制 ----------
@@ -269,13 +323,6 @@ export function EnvVarManager() {
           />
         </div>
         {/* 批量 / 管理按钮 */}
-        <button
-          onClick={() => setSortMode(sortMode === 'name' ? 'time' : 'name')}
-          className="flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
-          title="切换排序方式"
-        >
-          <RefreshCw size={14} /> {sortMode === 'name' ? '按名称' : '按时间'}
-        </button>
         <button
           onClick={fetchAll}
           className="p-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -410,6 +457,25 @@ export function EnvVarManager() {
 
                   <span className="text-xs text-gray-400">{group.variables.length} 个变量</span>
 
+                  {shellConfigInfo?.configFile && !shellConfigInfo.configFile.startsWith('N/A') && (
+                    <span
+                      className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 shrink-0"
+                      title={shellConfigInfo.configFile}
+                    >
+                      <FileText size={12} />
+                      <span className="font-mono max-w-[240px] truncate">
+                        {shellConfigInfo.configFile}
+                      </span>
+                      <button
+                        onClick={() => ipc.copyToClipboard(shellConfigInfo.configFile)}
+                        className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+                        title="复制文件路径"
+                      >
+                        <Copy size={12} />
+                      </button>
+                    </span>
+                  )}
+
                   <button
                     onClick={() => openEdit(group)}
                     className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -459,6 +525,14 @@ export function EnvVarManager() {
           onAfterTemplatesChange={fetchAll}
         />
       )}
+
+      {/* 导入冲突对话框 */}
+      <ImportConflictDialog
+        isOpen={showImportDialog}
+        preview={importPreview}
+        onCancel={handleImportCancel}
+        onConfirm={handleImportConfirm}
+      />
 
       {/* 删除确认 */}
       <ConfirmDialog

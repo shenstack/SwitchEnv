@@ -9,6 +9,7 @@ import type {
   ShellConfigInfo,
   Template,
   EnvVarConflict,
+  ImportPreviewResult,
 } from '../types';
 
 // ===== 环境变量 =====
@@ -132,6 +133,30 @@ export async function importGroups(json: string): Promise<number> {
   return invoke('import_groups', { json });
 }
 
+/**
+ * 预检导入：按名称比对现有变量组，返回新增组和冲突组。
+ */
+export async function previewImportGroups(json: string): Promise<ImportPreviewResult> {
+  return invoke('preview_import_groups', { json });
+}
+
+/**
+ * 执行导入：根据用户决策覆盖、合并或忽略。
+ */
+export async function executeImportGroups(
+  json: string,
+  overwriteNames: string[],
+  mergeNames: string[],
+  ignoreNames: string[],
+): Promise<number> {
+  return invoke('execute_import_groups', {
+    json,
+    overwriteNames,
+    mergeNames,
+    ignoreNames,
+  });
+}
+
 export async function batchDeleteGroups(ids: string[]): Promise<number> {
   return invoke('batch_delete_groups', { ids });
 }
@@ -192,6 +217,10 @@ export async function getAppSettings(): Promise<AppSettings> {
 
 export async function setAppSettings(settings: AppSettings): Promise<void> {
   return invoke('set_app_settings', { settings });
+}
+
+export async function cleanupLogs(retentionDays: number): Promise<number> {
+  return invoke('cleanup_logs', { retentionDays });
 }
 
 // ===== 工具 =====

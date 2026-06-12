@@ -25,18 +25,24 @@ impl PlatformService for MacOSPlatformService {
                 value,
                 is_system: is_system_scope,
                 is_readonly: false,
+                source: if is_system_scope {
+                    Some("launchctl 会话环境".to_string())
+                } else {
+                    None
+                },
             })
             .collect();
 
         if !is_system_scope {
-            if let Ok(profile_vars) = self.shell_profile.read_managed_vars() {
-                for (name, value) in profile_vars {
+            if let Ok(profile_vars) = self.shell_profile.read_managed_vars_with_source() {
+                for (name, value, source_path) in profile_vars {
                     if !vars.iter().any(|v| v.name == name) {
                         vars.push(EnvVar {
                             name,
                             value,
                             is_system: false,
                             is_readonly: false,
+                            source: Some(source_path),
                         });
                     }
                 }

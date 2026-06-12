@@ -39,6 +39,7 @@ impl PlatformService for LinuxPlatformService {
                         value: value.to_string(),
                         is_system: true,
                         is_readonly: false,
+                        source: Some(ETC_ENVIRONMENT.to_string()),
                     });
                 }
             }
@@ -50,17 +51,19 @@ impl PlatformService for LinuxPlatformService {
                     value,
                     is_system: false,
                     is_readonly: false,
+                    source: None,
                 })
                 .collect();
 
-            if let Ok(profile_vars) = self.shell_profile.read_managed_vars() {
-                for (name, value) in profile_vars {
+            if let Ok(profile_vars) = self.shell_profile.read_managed_vars_with_source() {
+                for (name, value, source_path) in profile_vars {
                     if !vars.iter().any(|v| v.name == name) {
                         vars.push(EnvVar {
                             name,
                             value,
                             is_system: false,
                             is_readonly: false,
+                            source: Some(source_path),
                         });
                     }
                 }

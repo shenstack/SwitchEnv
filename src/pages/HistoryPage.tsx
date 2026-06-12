@@ -71,8 +71,7 @@ export function HistoryPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold">操作历史</h2>
+      <div className="flex items-center justify-end mb-6">
         <div className="flex items-center gap-2">
           <button onClick={fetchHistory} className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
             <RefreshCw size={18} />

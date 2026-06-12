@@ -23,7 +23,7 @@ pub fn run() {
             let app_dir = app.path().app_data_dir().expect("failed to get app data dir");
             std::fs::create_dir_all(&app_dir).expect("failed to create app data dir");
 
-            let logs_dir = app_dir.join("logs");
+            let logs_dir = app.path().app_log_dir().expect("failed to get app log dir");
             std::fs::create_dir_all(&logs_dir).expect("failed to create logs dir");
             let log_path = logs_dir.join(format!("{}.log", chrono::Local::now().format("%Y-%m-%d")));
             let dispatch = fern::Dispatch::new()
@@ -65,6 +65,11 @@ pub fn run() {
 
             let platform: Arc<dyn PlatformService> = Arc::from(platforms::create_platform_service());
             let state = AppState::new(conn, platform, log_path);
+
+            if let Err(e) = commands::settings_commands::run_startup_cleanup(&state) {
+                log::warn!("[startup] 日志启动清理失败: {}", e);
+            }
+
             app.manage(state);
             Ok(())
         })
@@ -90,6 +95,8 @@ pub fn run() {
             commands::template_commands::delete_template,
             commands::group_io_commands::export_groups,
             commands::group_io_commands::import_groups,
+            commands::group_io_commands::preview_import_groups,
+            commands::group_io_commands::execute_import_groups,
             commands::group_io_commands::batch_delete_groups,
             commands::group_io_commands::detect_conflicts,
             commands::history_commands::get_history,
@@ -103,7 +110,9 @@ pub fn run() {
             commands::backup_commands::import_backup,
             commands::settings_commands::get_app_settings,
             commands::settings_commands::set_app_settings,
+            commands::settings_commands::cleanup_logs,
             commands::utils_commands::copy_to_clipboard,
+            commands::utils_commands::open_path,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

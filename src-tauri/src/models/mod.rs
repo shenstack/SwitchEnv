@@ -8,6 +8,8 @@ pub struct EnvVar {
     pub is_system: bool,
     #[serde(rename = "isReadonly")]
     pub is_readonly: bool,
+    #[serde(rename = "source", skip_serializing_if = "Option::is_none", default)]
+    pub source: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -114,8 +116,8 @@ pub struct Backup {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppSettings {
     pub theme: ThemeSettings,
-    pub notification: NotificationSettings,
     pub history: HistorySettings,
+    pub logs: LogSettings,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -126,15 +128,15 @@ pub struct ThemeSettings {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct NotificationSettings {
-    #[serde(rename = "desktopEnabled")]
-    pub desktop_enabled: bool,
-    #[serde(rename = "inAppEnabled")]
-    pub in_app_enabled: bool,
+pub struct HistorySettings {
+    #[serde(rename = "autoCleanup")]
+    pub auto_cleanup: bool,
+    #[serde(rename = "retentionDays")]
+    pub retention_days: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct HistorySettings {
+pub struct LogSettings {
     #[serde(rename = "autoCleanup")]
     pub auto_cleanup: bool,
     #[serde(rename = "retentionDays")]
@@ -148,13 +150,13 @@ impl Default for AppSettings {
                 mode: "system".to_string(),
                 font_level: 2,
             },
-            notification: NotificationSettings {
-                desktop_enabled: true,
-                in_app_enabled: true,
-            },
             history: HistorySettings {
                 auto_cleanup: true,
                 retention_days: 30,
+            },
+            logs: LogSettings {
+                auto_cleanup: true,
+                retention_days: 3,
             },
         }
     }
@@ -192,4 +194,44 @@ pub struct GroupExport {
     pub variables: Vec<EnvVariable>,
     #[serde(rename = "createdAt")]
     pub created_at: Option<i64>,
+}
+
+/// 变量差异项，用于冲突组中逐变量对比。
+/// diff_type 取值: "added_only_incoming" | "missing_only_existing" | "value_changed" | "identical"
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ImportVarDiff {
+    pub name: String,
+    #[serde(rename = "diffType")]
+    pub diff_type: String,
+    #[serde(rename = "existingValue", skip_serializing_if = "Option::is_none", default)]
+    pub existing_value: Option<String>,
+    #[serde(rename = "incomingValue", skip_serializing_if = "Option::is_none", default)]
+    pub incoming_value: Option<String>,
+    #[serde(rename = "existingIsHidden", skip_serializing_if = "Option::is_none", default)]
+    pub existing_is_hidden: Option<bool>,
+    #[serde(rename = "incomingIsHidden", skip_serializing_if = "Option::is_none", default)]
+    pub incoming_is_hidden: Option<bool>,
+}
+
+/// 单个冲突组，用于前端弹窗展示。
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ImportConflictGroup {
+    pub name: String,
+    #[serde(rename = "existingDescription")]
+    pub existing_description: String,
+    #[serde(rename = "incomingDescription")]
+    pub incoming_description: String,
+    #[serde(rename = "varDiffs")]
+    pub var_diffs: Vec<ImportVarDiff>,
+    #[serde(rename = "isIdentical")]
+    pub is_identical: bool,
+}
+
+/// 预检返回的整体结构。
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ImportPreviewResult {
+    #[serde(rename = "newGroups")]
+    pub new_groups: Vec<GroupExport>,
+    #[serde(rename = "conflictGroups")]
+    pub conflict_groups: Vec<ImportConflictGroup>,
 }

@@ -6,7 +6,7 @@ export function SystemVars() {
       isSystem={true}
       title="系统级变量"
       showReadOnlyBanner={true}
-      showSystemSettingsButton={true}
+      showSystemSettingsButton={false}
     />
   );
 }

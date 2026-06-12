@@ -50,7 +50,7 @@
 1. `app.path().app_data_dir()` 在 Windows / macOS / Linux 上均返回有效的绝对路径，且目录可写。
 2. `fern` 的 `Dispatch::new().chain(stdout).chain(log_file).apply()` 在 Tauri 运行时中无初始化顺序问题（logger 初始化在 `setup` 早期完成，早于任何 `invoke` 调用）。
 3. `std::time::Instant` 足够精确到毫秒级；若需更高精度的微秒级可后续调整，但毫秒对当前 20s 级别问题足够。
-4. 用户在 Windows 上主要运行，日志路径以 `%APPDATA%/com.switchenv.app/performance.log` 为常见位置。
+4. 用户在 Windows 上主要运行，日志路径以 `%APPDATA%/io.github.shenstack.switchenv/performance.log` 为常见位置。
 
 ## Acceptance Criteria
 

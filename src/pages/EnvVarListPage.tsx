@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { RefreshCw, Copy, ExternalLink, Download } from 'lucide-react';
+import { RefreshCw, Copy, ExternalLink, Download, FileText } from 'lucide-react';
 import { save as saveDialog } from '@tauri-apps/plugin-dialog';
 import * as ipc from '../services/ipc';
 import { useToast } from '../components/ToastProvider';
@@ -125,6 +125,11 @@ export function EnvVarListPage({
                   <span className="font-mono text-indigo-600 dark:text-indigo-400 min-w-[160px] truncate">{v.name}</span>
                   <span className="text-gray-300">=</span>
                   <span className="font-mono flex-1 truncate text-gray-600 dark:text-gray-300">{v.value}</span>
+                  {v.source && (
+                    <span className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 cursor-default" title={`来源文件: ${v.source}`}>
+                      <FileText size={12} className="text-gray-400" />
+                    </span>
+                  )}
                   <button onClick={() => handleCopy(v.value)} className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700" title="复制值">
                     <Copy size={12} />
                   </button>

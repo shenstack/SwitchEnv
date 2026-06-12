@@ -12,8 +12,8 @@ interface AppStore {
 export const useAppStore = create<AppStore>()((set) => ({
   settings: {
     theme: { mode: 'system', fontLevel: 2 },
-    notification: { desktopEnabled: true, inAppEnabled: true },
     history: { autoCleanup: true, retentionDays: 30 },
+    logs: { autoCleanup: true, retentionDays: 3 },
   },
   loading: false,
 

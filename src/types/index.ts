@@ -3,6 +3,8 @@ export interface EnvVar {
   value: string;
   isSystem: boolean;
   isReadonly: boolean;
+  /** 变量来源文件路径，仅在 macOS / Linux 平台填充 */
+  source?: string;
 }
 
 export interface EnvVariable {
@@ -25,7 +27,7 @@ export interface EnvVarConflict {
   name: string;
   existingValue: string;
   newValue: string;
-  source: string; // 'system' 或某个已激活组的 id
+  source: string;
   sourceGroupName?: string;
 }
 
@@ -33,6 +35,34 @@ export interface ActivationResult {
   success: boolean;
   conflicts: EnvVarConflict[];
   errors: string[];
+}
+
+/**
+ * 变量组导入流程中逐变量差异项。
+ * diffType: "added_only_incoming" | "missing_only_existing" | "value_changed"
+ */
+export interface ImportVarDiff {
+  name: string;
+  diffType: string;
+  existingValue?: string | null;
+  incomingValue?: string | null;
+  existingIsHidden?: boolean | null;
+  incomingIsHidden?: boolean | null;
+}
+
+/** 导入流程中名称冲突的变量组信息 */
+export interface ImportConflictGroup {
+  name: string;
+  existingDescription: string;
+  incomingDescription: string;
+  varDiffs: ImportVarDiff[];
+  isIdentical: boolean;
+}
+
+/** 预检的整体结果 */
+export interface ImportPreviewResult {
+  newGroups: { name: string; description: string; variables: EnvVariable[]; createdAt?: number }[];
+  conflictGroups: ImportConflictGroup[];
 }
 
 /**
@@ -70,11 +100,11 @@ export interface AppSettings {
     mode: string;
     fontLevel: number;
   };
-  notification: {
-    desktopEnabled: boolean;
-    inAppEnabled: boolean;
-  };
   history: {
+    autoCleanup: boolean;
+    retentionDays: number;
+  };
+  logs: {
     autoCleanup: boolean;
     retentionDays: number;
   };

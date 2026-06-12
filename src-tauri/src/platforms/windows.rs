@@ -125,6 +125,7 @@ impl PlatformService for WindowsPlatformService {
                         value,
                         is_system: is_system_scope,
                         is_readonly: false,
+                        source: None,
                     });
                 }
                 Err(_) => continue,

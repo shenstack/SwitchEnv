@@ -62,6 +62,32 @@ impl ShellProfileManager {
         Ok(vars)
     }
 
+    /// 读取 SwitchEnv 标记区中的变量，同时返回每个变量的来源文件路径。
+    pub fn read_managed_vars_with_source(&self) -> Result<Vec<(String, String, String)>, String> {
+        let content = std::fs::read_to_string(&self.config_path).unwrap_or_default();
+        let source_path = self.config_path.to_string_lossy().to_string();
+        let mut vars = Vec::new();
+        let mut in_marker = false;
+
+        for line in content.lines() {
+            if line.trim() == MARKER_START {
+                in_marker = true;
+                continue;
+            }
+            if line.trim() == MARKER_END {
+                in_marker = false;
+                continue;
+            }
+            if in_marker {
+                if let Some((name, value)) = self.parse_export_line(line) {
+                    vars.push((name, value, source_path.clone()));
+                }
+            }
+        }
+
+        Ok(vars)
+    }
+
     pub fn set_var(&self, name: &str, value: &str) -> Result<(), String> {
         let content = std::fs::read_to_string(&self.config_path).unwrap_or_default();
         let export_line = match self.shell_type {
