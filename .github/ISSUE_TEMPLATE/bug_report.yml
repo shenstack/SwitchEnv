@@ -1,0 +1,68 @@
+name: 'Bug Report'
+description: '提交 Bug 报告'
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢花时间提交 Bug 报告！请尽量完整填写以下信息。
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: '操作系统'
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - 多平台均可复现
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 'SwitchEnv 版本'
+      placeholder: '例如 v1.0.0'
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: '问题描述'
+      description: '清晰描述遇到的问题'
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: '复现步骤'
+      description: '从打开应用开始的一步步操作'
+      value: |
+        1. 打开 SwitchEnv
+        2. 点击 '...'
+        3. 出现错误
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: '预期行为'
+      description: '你期望发生的结果'
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: '日志或截图'
+      description: '如有相关日志或截图请附上'
+      render: shell
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: '补充信息'
+      description: '任何其他你觉得有帮助的信息'
