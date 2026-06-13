@@ -34,20 +34,6 @@ pub struct EnvGroup {
     pub updated_at: i64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CreateGroupInput {
-    pub name: String,
-    pub description: String,
-    pub variables: Vec<EnvVariable>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct UpdateGroupInput {
-    pub name: Option<String>,
-    pub description: Option<String>,
-    pub variables: Option<Vec<EnvVariable>>,
-}
-
 /// 激活变量组的结果：
 /// - conflicts：与系统变量或其他已激活组存在冲突时填充，
 ///   success=false 时表示有冲突尚未被强制覆盖。

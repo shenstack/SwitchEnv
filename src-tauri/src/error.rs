@@ -16,10 +16,6 @@ pub enum AppError {
     Clipboard(String),
     #[error("未找到: {0}")]
     NotFound(String),
-    #[error("权限不足: {0}")]
-    PermissionDenied(String),
-    #[error("冲突检测: {0}")]
-    Conflict(String),
     #[error("验证错误: {0}")]
     Validation(String),
     #[error("其他错误: {0}")]

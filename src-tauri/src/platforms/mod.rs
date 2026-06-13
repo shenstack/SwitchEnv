@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 
 /// 平台信息（操作系统 / 架构）。
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(dead_code)]
 pub struct PlatformInfo {
     pub os: String,
     pub arch: String,
@@ -21,14 +22,18 @@ pub struct PlatformInfo {
 #[derive(Debug, thiserror::Error)]
 pub enum PlatformError {
     #[error("权限不足: {0}")]
+    #[allow(dead_code)]
     PermissionDenied(String),
     #[error("注册表操作失败: {0}")]
+    #[allow(dead_code)]
     RegistryError(String),
     #[error("Shell 配置操作失败: {0}")]
     ShellConfigError(String),
     #[error("值长度超过限制: {0}")]
+    #[allow(dead_code)]
     ValueTooLong(String),
     #[error("平台不支持: {0}")]
+    #[allow(dead_code)]
     Unsupported(String),
     #[error("命令执行失败: {0}")]
     CommandFailed(String),
@@ -49,9 +54,11 @@ pub trait PlatformService: Send + Sync {
     async fn get_variable(&self, name: &str) -> Result<Option<String>, PlatformError>;
     async fn can_modify_system(&self) -> Result<bool, PlatformError>;
     async fn refresh_environment(&self) -> Result<(), PlatformError>;
+    #[allow(dead_code)]
     fn get_value_length_limit(&self) -> usize;
     async fn open_system_settings(&self) -> Result<(), PlatformError>;
     async fn get_shell_config_info(&self) -> Result<ShellConfigInfo, PlatformError>;
+    #[allow(dead_code)]
     fn get_platform_info(&self) -> PlatformInfo;
 }
 
