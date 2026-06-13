@@ -4,7 +4,11 @@ import type { AppSettings } from '../types';
 import { getName, getVersion } from '@tauri-apps/api/app';
 import { invoke } from '@tauri-apps/api/core';
 import { appDataDir, appLogDir } from '@tauri-apps/api/path';
+import { open as shellOpen } from '@tauri-apps/plugin-shell';
 import * as ipc from '../services/ipc';
+import appLogo from '../assets/logo.png';
+
+const REPO_URL = 'https://github.com/shenstack/SwitchEnv';
 
 type SettingsTab = 'general' | 'about';
 
@@ -186,11 +190,26 @@ export function SettingsPage() {
       {/* ====== About Tab ====== */}
       {activeTab === 'about' && (
         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+          {/* Logo & App Name */}
+          <div className="flex flex-col items-center text-center pb-6 mb-4 border-b border-gray-100 dark:border-gray-700">
+            <img
+              src={appLogo}
+              alt="SwitchEnv Logo"
+              className="w-20 h-20 rounded-2xl shadow-md mb-4 object-cover"
+            />
+            <button
+              onClick={() => shellOpen(REPO_URL)}
+              className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline underline-offset-2 transition-colors cursor-pointer"
+              title="在浏览器中打开项目仓库"
+            >
+              {appInfo.name || 'SwitchEnv'}
+            </button>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              跨平台环境变量管理工具
+            </p>
+          </div>
+
           <div className="space-y-4">
-            <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">应用名称</span>
-              <span className="text-sm">{appInfo.name || '—'}</span>
-            </div>
             <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
               <span className="text-sm font-medium text-gray-500 dark:text-gray-400">版本</span>
               <span className="text-sm">{appInfo.version || '—'}</span>
