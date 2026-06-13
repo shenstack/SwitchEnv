@@ -74,7 +74,7 @@ jobs:
           # APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           # APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
-          tagName: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || github.event.inputs.version }}
-          releaseName: 'SwitchEnv ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || github.event.inputs.version }}'
+          tagName: "${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || github.event.inputs.version }}"
+          releaseName: "SwitchEnv ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || github.event.inputs.version }}"
           releaseDraft: true
           prerelease: false
