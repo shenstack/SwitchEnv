@@ -41,7 +41,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDM3NTY5OEU0RDZFMUQ5NzAKUldSdzJlSFc1SmhXTjBPVmZyTnFrVWRVS0Vva3ltSFdxSG9PdEU1Ly9WZm1jY2VEazRDa0xiTkwK%",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDM3NTY5OEU0RDZFMUQ5NzAKUldSdzJlSFc1SmhXTjBPVmZyTnFrVWRVS0Vva3ltSFdxSG9PdEU1Ly9WZm1jY2VEazRDa0xiTkwK",
       "endpoints": [
         "https://github.com/shenstack/SwitchEnv/releases/latest/download/latest.json"
       ]
