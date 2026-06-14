@@ -6,6 +6,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { appDataDir, appLogDir } from '@tauri-apps/api/path';
 import { open as shellOpen } from '@tauri-apps/plugin-shell';
 import * as ipc from '../services/ipc';
+import { useUpdate } from '../contexts/UpdateContext';
 import appLogo from '../assets/logo.png';
 
 const REPO_URL = 'https://github.com/shenstack/SwitchEnv';
@@ -18,6 +19,10 @@ export function SettingsPage() {
   const [appInfo, setAppInfo] = useState<{ name: string; version: string }>({ name: '', version: '' });
   const [dataDir, setDataDir] = useState<string>('');
   const [logDir, setLogDir] = useState<string>('');
+  const { status, info, checkUpdate, installUpdate } = useUpdate();
+  const isChecking = status === 'checking';
+  const isInstalling = status === 'installing';
+  const isBusy = isChecking || isInstalling;
 
   useEffect(() => {
     (async () => {
@@ -210,9 +215,49 @@ export function SettingsPage() {
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">版本</span>
-              <span className="text-sm">{appInfo.version || '—'}</span>
+            <div className="py-2 border-b border-gray-100 dark:border-gray-700">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">版本</span>
+
+                <div className="flex items-center gap-3">
+                  <span className="text-sm">
+                    {appInfo.version || '—'}
+                  </span>
+
+                  {status === 'available' ? (
+                    <button
+                      onClick={installUpdate}
+                      disabled={isInstalling}
+                      className="px-3 py-1.5 text-sm rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {isInstalling ? '正在下载并安装…' : '升级到新版本'}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={checkUpdate}
+                      disabled={isBusy}
+                      className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {isChecking ? '正在检查…' : '检查更新'}
+                    </button>
+                  )}
+                </div>
+              </div>
+              {status === 'available' && info && (
+                <p className="mt-2 text-xs text-indigo-600 dark:text-indigo-400">
+                  可升级到 v{info.availableVersion}
+                </p>
+              )}
+              {status === 'up-to-date' && (
+                <p className="mt-2 text-xs text-green-600 dark:text-green-400">
+                  已是最新版本
+                </p>
+              )}
+              {info?.notes && status === 'available' && (
+                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 whitespace-pre-line">
+                  {info.notes}
+                </p>
+              )}
             </div>
             <div className="flex items-start justify-between gap-4 py-2 border-b border-gray-100 dark:border-gray-700">
               <span className="text-sm font-medium text-gray-500 dark:text-gray-400 shrink-0">数据存储目录</span>

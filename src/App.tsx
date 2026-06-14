@@ -5,6 +5,7 @@ import { SystemVars } from './pages/SystemVars';
 import { HistoryPage } from './pages/HistoryPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { ToastProvider } from './components/ToastProvider';
+import { UpdateProvider } from './contexts/UpdateContext';
 import { useTheme } from './hooks/useTheme';
 import { Layers, User, Monitor, History, Settings, ArrowLeft } from 'lucide-react';
 
@@ -35,7 +36,8 @@ export default function App() {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <UpdateProvider>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
         {subPage === null && (
           <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
             <div className="max-w-7xl mx-auto px-4">
@@ -139,6 +141,7 @@ export default function App() {
           )}
         </main>
       </div>
+      </UpdateProvider>
     </ToastProvider>
   );
 }
