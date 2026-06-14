@@ -128,23 +128,39 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Install GitHub CLI
-        run: |
-          gh --version || (sudo apt-get update && sudo apt-get install -y gh)
-
-      - name: Download all release assets
+      - name: 下载所有 Release 资产
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           TAG="${GITHUB_REF_NAME}"
           mkdir -p dl
-          gh release download "$TAG" --dir dl --repo "$GITHUB_REPOSITORY" || echo "release download completed (some items may not exist yet)"
+          # 通过 GitHub API 拉取 release（含草稿版）资产列表并逐个下载，避免 gh release 对草稿版不稳定
+          RELEASE_ID=$(curl -sSf \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/$TAG" \
+            | python3 -c "import sys,json;print(json.load(sys.stdin)['id'])")
+          echo "Release ID: $RELEASE_ID"
+          ASSETS=$(curl -sSf \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets" \
+            | python3 -c "import sys,json;[print(a['id'],a['name']) for a in json.load(sys.stdin)]")
+          while read -r AID ANAME; do
+            [ -z "$AID" ] && continue
+            echo "Downloading: $ANAME (id=$AID)"
+            curl -sSfL \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/octet-stream" \
+              -o "dl/$ANAME" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AID"
+          done <<< "$ASSETS"
           echo "--- downloaded assets ---"
           ls -la dl || true
           echo "-------------------------"
 
-      - name: Generate latest.json
+      - name: 生成 latest.json
         env:
           REPO: ${{ github.repository }}
           TAG: ${{ github.ref_name }}
@@ -154,7 +170,6 @@ jobs:
           PUB_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           base_url="https://github.com/$REPO/releases/download/$TAG"
 
-          # 初始化空平台映射
           mac_url=""; mac_sig=""
           win_url=""; win_sig=""
           linux_x64_url=""; linux_x64_sig=""
@@ -168,7 +183,6 @@ jobs:
             sig_content=$(cat "$sig")
             case "$fname" in
               *.tar.gz|*.app.tar.gz)
-                # macOS updater artifact（同时为 arm64 和 x64 提供，universal build）
                 mac_url="$url"; mac_sig="$sig_content";;
               *-Linux-arm64.AppImage|*-Linux-arm64.appimage)
                 linux_arm64_url="$url"; linux_arm64_sig="$sig_content";;
@@ -179,7 +193,6 @@ jobs:
             esac
           done
 
-          # 构造 JSON（仅包含存在的目标）
           tmp_json=$(mktemp)
           {
             echo '{'
@@ -189,7 +202,6 @@ jobs:
             echo '  "platforms": {'
             first=1
             if [ -n "$mac_url" ] && [ -n "$mac_sig" ]; then
-              # 为兼容 arm64 / x64，重复写入两个键，指向同一 universal 包
               for key in darwin-aarch64 darwin-x86_64; do
                 [ $first -eq 0 ] && echo ','
                 echo "    \"$key\": {\"signature\": \"$mac_sig\", \"url\": \"$mac_url\"}"
@@ -218,10 +230,14 @@ jobs:
           cat "$tmp_json"
           mv "$tmp_json" latest.json
 
-      - name: Upload latest.json to release
+      - name: 上传 latest.json 到 Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: latest.json
+          append_body: false
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          gh release upload "$GITHUB_REF_NAME" latest.json --clobber --repo "$GITHUB_REPOSITORY"
-          echo "✅ latest.json 已覆盖上传到 Release $GITHUB_REF_NAME"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 完成说明
+        run: echo "latest.json 已上传到 Release ${{ github.ref_name }}"
