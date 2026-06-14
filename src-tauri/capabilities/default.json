@@ -13,6 +13,7 @@
     "fs:default",
     "fs:read-all",
     "fs:write-all",
+    "updater:default",
     {
       "identifier": "fs:scope",
       "description": "允许 fs 插件命中任意路径的 scope（path 通配 **）。配合 dialog 选择的文件路径一同使用。",
