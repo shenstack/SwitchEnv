@@ -1,4 +1,7 @@
+#[cfg(target_os = "macos")]
 pub mod macos;
+
+#[cfg(any(target_os = "macos", target_os = "linux"))]
 pub mod shell_profile;
 
 #[cfg(windows)]
