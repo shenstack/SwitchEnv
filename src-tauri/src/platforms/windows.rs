@@ -194,7 +194,7 @@ impl PlatformService for WindowsPlatformService {
     /// 不再全量重写当前进程的环境块 —— 当前应用无需从自身进程环境块读取业务变量，
     /// 全量 set_var 既耗时又不必要。
     async fn refresh_environment(&self) -> Result<(), PlatformError> {
-        Self::broadcast_setting_change();
+//         Self::broadcast_setting_change();
         Ok(())
     }
 

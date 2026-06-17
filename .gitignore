@@ -49,7 +49,7 @@ build/
 ### Tauri / Vite ###
 /dist/
 /src-tauri/target/
-/src-tauri/gen/schemas/*.backup.json
+/src-tauri/gen
 **/.DS_Store
 /docs/Env_variable_assistant_utools/
 /docs/cc-switch-main
